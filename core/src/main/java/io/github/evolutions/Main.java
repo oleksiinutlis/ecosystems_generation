@@ -16,7 +16,7 @@ public class Main extends ApplicationAdapter {
     private World world;
     private static final int worldSize = 128; // has to be a power of 2
 
-    
+
     private FitViewport viewport;
     private SpriteBatch batch;
     private Texture texture;
@@ -45,7 +45,7 @@ public class Main extends ApplicationAdapter {
                 } else {
                     // Grass (darker green for higher terrain)
                     float greenShade = 1.0f - ((f - 0.30f) / 0.70f); // higher = darker
-                    greenShade = 0.75f + 0.5f * greenShade;
+                    greenShade = 0.5f + 0.5f * greenShade;
                     color = new Color(0f, greenShade, 0f, 1f);
                 }
                 pixmap.drawPixel(x, y, Color.rgba8888(color));

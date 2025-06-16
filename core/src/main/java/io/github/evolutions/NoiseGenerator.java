@@ -20,9 +20,9 @@ public class NoiseGenerator {
 
     public float[][] generateSmoothNoise(int outputSize){
         // Three noises with different weights to smooth out the result
-        float[][] whiteNoiseSmall = generateWhiteNoise(outputSize/8);
-        float[][] whiteNoiseMid = generateWhiteNoise(outputSize/4);
-        float[][] whiteNoiseBig = generateWhiteNoise(outputSize/2);
+        float[][] whiteNoiseSmall = generateWhiteNoise(outputSize/16);
+        float[][] whiteNoiseMid = generateWhiteNoise(outputSize/8);
+        float[][] whiteNoiseBig = generateWhiteNoise(outputSize/4);
 
         float[][] smoothNoise = new float[outputSize][outputSize];
 
