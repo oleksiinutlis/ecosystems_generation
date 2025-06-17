@@ -65,7 +65,7 @@ public class NoiseGenerator {
         return value;
     }
 
-    public float[][] generateWhiteNoise(int size){
+        public float[][] generateWhiteNoise(int size){
         float[][] whiteNoise = new float[size][size];
         for (int i = 0; i < whiteNoise.length; i++) {
             for (int j = 0; j < whiteNoise.length; j++) {
