@@ -48,7 +48,9 @@ public class Main extends ApplicationAdapter {
                     continue;
                 }
 
+
                 if (f >= 0.45f && f < 0.70f) {
+                    // Tree generation, 1.5% chance
                     if (random.nextFloat() < 0.015f){
                         color = new Color(255,0,0, 1f);
                         pixmap.drawPixel(x, y, Color.rgba8888(color));
