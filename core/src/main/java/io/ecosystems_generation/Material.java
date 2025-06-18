@@ -1,4 +1,4 @@
-package io.github.evolutions;
+package io.ecosystems_generation;
 
 public enum Material{
     GROUND,

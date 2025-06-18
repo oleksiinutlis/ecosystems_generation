@@ -1,4 +1,4 @@
-package io.github.evolutions;
+package io.ecosystems_generation;
 
 public class Animal {
     public int animal_id;

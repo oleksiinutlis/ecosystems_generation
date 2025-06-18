@@ -1,4 +1,4 @@
-package io.github.evolutions;
+package io.ecosystems_generation;
 
 import java.util.Random;
 

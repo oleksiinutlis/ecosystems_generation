@@ -1,9 +1,8 @@
-package io.github.evolutions.lwjgl3;
+package io.ecosystems_generation.lwjgl3;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import io.github.evolutions.Main;
-import io.github.evolutions.World;
+import io.ecosystems_generation.Main;
 
 /** Launches the desktop (LWJGL3) application. */
 public class Lwjgl3Launcher {
