@@ -69,7 +69,7 @@ public class NoiseGenerator {
         float[][] whiteNoise = new float[size][size];
         for (int i = 0; i < whiteNoise.length; i++) {
             for (int j = 0; j < whiteNoise.length; j++) {
-                whiteNoise[i][j] = (float) random.nextFloat();
+                whiteNoise[i][j] =  random.nextFloat();
             }
         }
         return whiteNoise;
