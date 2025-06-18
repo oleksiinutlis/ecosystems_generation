@@ -85,4 +85,3 @@ Processes to implement:
 
 
 - optimisation of viewing 3d terrain
-    
