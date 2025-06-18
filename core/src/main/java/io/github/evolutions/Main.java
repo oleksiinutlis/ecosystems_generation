@@ -25,10 +25,10 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
-
         viewport = new FitViewport(worldSize, worldSize);
         batch = new SpriteBatch();
         Pixmap pixmap = new Pixmap(worldSize, worldSize, Pixmap.Format.RGBA8888);
+
         //
         // noise generation visualisation
         //
@@ -88,10 +88,6 @@ public class Main extends ApplicationAdapter {
     public void dispose() {
         batch.dispose();
         texture.dispose();
-    }
-
-    public static int getWorldSize(){
-        return worldSize;
     }
 
 
