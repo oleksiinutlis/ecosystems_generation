@@ -38,14 +38,14 @@ public class NoiseGenerator {
     }
 
     private float calculateValueNoise(int x, int y,  int inputSize, int outputSize, float[][] whiteNoise){
-        float gy = ((float) y / (outputSize - 1)) * (inputSize - 1);
+        float gy = ( (float) y / (outputSize - 1) ) * (inputSize - 1);
         int y0 = (int) Math.floor(gy);
         int y1 = Math.min(y0 + 1, inputSize - 1);
         float ty = fade(gy - y0);
 
 
         // Map x coordinate to fractional white noise grid coordinate
-        float gx = ((float) x / (outputSize - 1)) * (inputSize - 1);
+        float gx = ( (float) x / (outputSize - 1) ) * (inputSize - 1);
         int x0 = (int) Math.floor(gx);
         int x1 = Math.min(x0 + 1, inputSize - 1);
         float tx = fade(gx - x0);
@@ -61,15 +61,14 @@ public class NoiseGenerator {
         float ix1 = lerp(v01, v11, tx);
 
         // Interpolate vertically
-        float value = lerp(ix0, ix1, ty);
-        return value;
+        return lerp(ix0, ix1, ty);
     }
 
-        public float[][] generateWhiteNoise(int size){
+    public float[][] generateWhiteNoise(int size){
         float[][] whiteNoise = new float[size][size];
         for (int i = 0; i < whiteNoise.length; i++) {
             for (int j = 0; j < whiteNoise.length; j++) {
-                whiteNoise[i][j] =  random.nextFloat();
+                whiteNoise[i][j] = random.nextFloat();
             }
         }
         return whiteNoise;
