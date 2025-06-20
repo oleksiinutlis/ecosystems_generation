@@ -65,8 +65,7 @@ public class World {
                     }
                 }
                 // Grass (darker green for higher terrain)
-                terrain[x][y] =
-                    terrain[x][y] = new Terrain(Material.GROUND);
+                terrain[x][y] = new Terrain(Material.GROUND);
             }
         }
     }

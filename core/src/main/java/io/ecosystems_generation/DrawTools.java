@@ -26,30 +26,28 @@ public class DrawTools {
             for (int y = 0; y < worldSize; y++) {
                 float f = noise[x][y];
                 Color color;
-                if ( terrain[x][y].getMaterialType().equals(Material.WATER) ) {
-                    // Water (darker blue for deeper)
-                    float blueShade = 0.3f + 0.7f * (f / 0.30f); // deeper = darker
-                    color = new Color(0f, 0f, blueShade, 1f);
-                    pixmap.drawPixel(x, y, Color.rgba8888(color));
-                    continue;
+                Material material = terrain[x][y].getMaterialType();
+                switch (material){
+                    case WATER:
+                        float blueShade = 0.3f + 0.7f * (f / 0.30f); // deeper = darker
+                        color = new Color(0f, 0f, blueShade, 1f);
+                        pixmap.drawPixel(x, y, Color.rgba8888(color));
+                        break;
+                    case STONE:
+                        color = new Color(255,0,0, 1f);
+                        pixmap.drawPixel(x, y, Color.rgba8888(color));
+                        break;
+                    case TREE:
+                        color = new Color(128,128,128, 0f);
+                        pixmap.drawPixel(x, y, Color.rgba8888(color));
+                        break;
+                    case GROUND:
+                        float greenShade = 1.0f - ((f - 0.30f) / 0.70f); // higher = darker
+                        greenShade = 0.5f + 0.5f * greenShade;
+                        color = new Color(0f, greenShade, 0f, 1f);
+                        pixmap.drawPixel(x, y, Color.rgba8888(color));
+                        break;
                 }
-
-                if ( terrain[x][y].getMaterialType().equals(Material.TREE) ) {
-                    color = new Color(255,0,0, 1f);
-                    pixmap.drawPixel(x, y, Color.rgba8888(color));
-                    continue;
-                }
-
-                if ( terrain[x][y].getMaterialType().equals(Material.STONE) ){
-                    color = new Color(128,128,128, 0f);
-                    pixmap.drawPixel(x, y, Color.rgba8888(color));
-                    continue;
-                }
-                // Grass (darker green for higher terrain)
-                float greenShade = 1.0f - ((f - 0.30f) / 0.70f); // higher = darker
-                greenShade = 0.5f + 0.5f * greenShade;
-                color = new Color(0f, greenShade, 0f, 1f);
-                pixmap.drawPixel(x, y, Color.rgba8888(color));
             }
         }
 

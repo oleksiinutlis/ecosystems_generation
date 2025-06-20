@@ -24,13 +24,11 @@ public class Main extends ApplicationAdapter {
 
         this.world = new World(worldSize);
 
-        //
+        DrawTools drawTool = new DrawTools();
+
         // noise generation visualisation
-        //
 
-        DrawTools drawTools = new DrawTools();
-
-        Pixmap pixmap = drawTools.getNoisePixmap();
+        Pixmap pixmap = drawTool.getNoisePixmap();
         texture = new Texture(pixmap);
     }
 
