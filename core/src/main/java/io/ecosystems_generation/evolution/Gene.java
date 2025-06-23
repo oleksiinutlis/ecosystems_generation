@@ -1,4 +1,4 @@
-package io.ecosystems_generation;
+package io.ecosystems_generation.evolution;
 // NOTE: CURRENT IMPLEMENTATION OF MUTATION COULD HAVE ERRORS IF THE CHOSEN MUTATION VOLATILITY + RANDOM TRAVEL RANGES IS LARGER THAN BE ALLOWED FOR A BYTE
 public class Gene {
     // == required input variables ==
