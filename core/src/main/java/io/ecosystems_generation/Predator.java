@@ -1,4 +1,4 @@
-package io.ecosystems_generation.evolution;
+package io.ecosystems_generation;
 
 
 public class Predator extends Animal {
