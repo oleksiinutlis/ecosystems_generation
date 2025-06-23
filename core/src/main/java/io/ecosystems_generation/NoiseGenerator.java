@@ -5,8 +5,7 @@ import java.util.Random;
 public class NoiseGenerator {
 
     // Seeded random for reproducible results
-    private Random random = new Random(123);
-
+    private Random random = World.getRandom();
     // Smoothstep (fade) function for smooth interpolation
     private static float fade(float t) {
         return t * t * (3 - 2 * t);

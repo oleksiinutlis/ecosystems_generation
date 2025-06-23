@@ -9,7 +9,7 @@ public class World {
 
     private static int worldSize;
 
-    private static final Random random = new Random();
+    private static final Random random = new Random(7777);
 
     public World(int size){
         worldSize = size;
@@ -44,7 +44,7 @@ public class World {
             for (int y = 0; y < worldSize; y++) {
                 float f = noise[x][y];
 
-                if (f < 0.30f) {
+                if (f < 0.40f) {
                     // Water (darker blue for deeper)
                     terrain[x][y] = new Terrain(Material.WATER);
                     continue;
@@ -58,7 +58,7 @@ public class World {
                     }
                 }
 
-                if (f >= 0.35f && f < 0.65f) {
+                if (f >= 0.45f && f < 0.65f) {
                     // Stone generation, 1.5% generation chance
                     if (random.nextFloat() < 0.015f) {
                         terrain[x][y] = new Terrain(Material.STONE);
@@ -74,10 +74,8 @@ public class World {
     private void setEntities() {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
-                
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                System.out.println("ground for food");
-                
+                //System.out.println("ground for food");
                 }
             }
         }
