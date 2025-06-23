@@ -2,6 +2,9 @@ package io.ecosystems_generation;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
 
@@ -47,4 +50,25 @@ public class DrawTools {
         }
         return new Color(0,0,0,0f);
     }
+
+    public void drawTiles(ShapeRenderer shapeRenderer, int GRID_WIDTH, int GRID_HEIGHT, int TILE_SIZE){
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int y = 0; y < GRID_HEIGHT; y++) {
+                Color color = getGridColor(x, y);
+                shapeRenderer.setColor(color);
+                shapeRenderer.rect(x * TILE_SIZE,y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            }
+        }
+        shapeRenderer.end();
+    }
+
+    public void drawPixmap(SpriteBatch batch){
+        Pixmap pixmap = getNoisePixmap();
+        Texture texture = new Texture(pixmap);
+        batch.begin();
+        batch.draw(texture,0,0);
+        batch.end();
+    }
+
 }

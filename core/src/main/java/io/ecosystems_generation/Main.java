@@ -28,9 +28,9 @@ public class Main extends ApplicationAdapter{
     private static final int GRID_HEIGHT = 64;
     private static final int TILE_SIZE = 32;
 
+    private Texture texture;
     private FitViewport viewport;
     private SpriteBatch batch;
-    private Texture texture;
     private ShapeRenderer shapeRenderer;
 
     @Override
@@ -39,6 +39,8 @@ public class Main extends ApplicationAdapter{
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
+        this.world = new World(worldSize);
+        this.drawTool = new DrawTools();
         // generates a world and terrain
     }
 
@@ -49,12 +51,11 @@ public class Main extends ApplicationAdapter{
 
     @Override
     public void render() {
-        this.world = new World(worldSize);
-        this.drawTool = new DrawTools();
-
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
+
         handleTickLogic();
-        drawTiles();
+        drawTool.drawTiles(shapeRenderer, GRID_WIDTH, GRID_HEIGHT, TILE_SIZE);
+
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
@@ -70,25 +71,6 @@ public class Main extends ApplicationAdapter{
     }
 
 
-    public void drawTiles(){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (int x = 0; x < GRID_WIDTH; x++) {
-            for (int y = 0; y < GRID_HEIGHT; y++) {
-                Color color = drawTool.getGridColor(x, y);
-                shapeRenderer.setColor(color);
-                shapeRenderer.rect(x * TILE_SIZE,y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-            }
-        }
-        shapeRenderer.end();
-    }
-
-    public void drawPixmap(){
-        Pixmap pixmap = drawTool.getNoisePixmap();
-        texture = new Texture(pixmap);
-        batch.begin();
-        batch.draw(texture,0,0);
-        batch.end();
-    }
 
     // Tick logic
     public void handleTickLogic(){

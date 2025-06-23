@@ -14,10 +14,10 @@ public class World {
     public World(int size){
         worldSize = size;
         terrain = new Terrain[worldSize][worldSize];
+        entities = new Entity[worldSize][worldSize];
 
         NoiseGenerator noiseGenerator = new NoiseGenerator();
         noise = noiseGenerator.generateSmoothNoise(worldSize);
-        this.entities = new Entity[worldSize][worldSize];
         setTerrain();
         setEntities();
     }
@@ -52,7 +52,7 @@ public class World {
 
                 if (f >= 0.45f && f < 0.70f) {
                     // Tree generation, 1.5% generation chance
-                    if (random.nextFloat() < 0.015f) {
+                    if (TerrainUtils.getRandomBoolean(1.5f)) {
                         terrain[x][y] = new Terrain(Material.TREE);
                         continue;
                     }
@@ -60,7 +60,7 @@ public class World {
 
                 if (f >= 0.45f && f < 0.65f) {
                     // Stone generation, 1.5% generation chance
-                    if (random.nextFloat() < 0.015f) {
+                    if (TerrainUtils.getRandomBoolean(1.5f)) {
                         terrain[x][y] = new Terrain(Material.STONE);
                         continue;
                     }

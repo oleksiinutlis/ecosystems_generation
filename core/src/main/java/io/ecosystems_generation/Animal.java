@@ -20,7 +20,7 @@ public class Animal {
     public Gene likabilityGene;
     // likability has gene id 0b0111
     public Gene aggresivenessGene;
-    // aggresiveness has gene id 0b1000
+    // aggressiveness has gene id 0b1000
 
     //
     // animal constructor with randomised genetic information, animal id derived through input
