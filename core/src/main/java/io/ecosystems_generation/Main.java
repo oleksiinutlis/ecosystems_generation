@@ -22,10 +22,10 @@ public class Main extends ApplicationAdapter{
     private static final float ticksPerSecond = 600f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
-    private static final int worldSize = 32; // has to be a power of 2
+    private static final int worldSize = 128; // has to be a power of 2
 
-    private static final int GRID_WIDTH = 32;
-    private static final int GRID_HEIGHT = 32;
+    private static final int GRID_WIDTH = 96;
+    private static final int GRID_HEIGHT = 64;
     private static final int TILE_SIZE = 32;
 
     private FitViewport viewport;
@@ -44,7 +44,7 @@ public class Main extends ApplicationAdapter{
 
     @Override
     public void resize(int width, int height){
-        viewport.update(width, height,false);
+        //viewport.update(width, height,true);
     }
 
     @Override
