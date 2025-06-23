@@ -19,6 +19,7 @@ public class World {
         noise = noiseGenerator.generateSmoothNoise(worldSize);
 
         setTerrain();
+        setEntities();
     }
 
 
@@ -68,5 +69,18 @@ public class World {
                 terrain[x][y] = new Terrain(Material.GROUND);
             }
         }
+    }
+
+    private void setEntities() {
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
+                
+                if (terrain[x][y].getMaterialType() == Material.GROUND) {
+                System.out.println("ground for food");
+                
+                }
+            }
+        }
+
     }
 }
