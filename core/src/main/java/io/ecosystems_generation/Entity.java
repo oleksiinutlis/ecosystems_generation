@@ -1,10 +1,10 @@
 package io.ecosystems_generation;
 
-public class Entity {
-    public enum entityType {
-        RABBIT,
-        FOX,
-        FISH,
-        PLANT
+public interface Entity {
+
+    public enum EntityType {
+    PREY,
+    PREDATOR,
+    FOOD
     }
 }
