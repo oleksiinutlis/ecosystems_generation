@@ -75,7 +75,9 @@ public class World {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                //System.out.println("ground for food");
+                boolean chance = TerrainUtils.getChanceCheck(100);
+                
+                System.out.println("ground for food");
                 }
             }
         }
