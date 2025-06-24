@@ -29,12 +29,20 @@ public class Lwjgl3Launcher {
         //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
+        Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
+        Main.setScreenSize(displayMode.width, displayMode.height);
+        configuration.setWindowedMode(1024,1024);
+//// Get the current monitor's display mode (native resolution)
+//
+//// Set window size to match screen resolution
+//        configuration.setWindowedMode(displayMode.width, displayMode.height);
 
-//        configuration.setWindowedMode(1024,1024);
-        configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
-        //// You can change these files; they are in lwjgl3/src/main/resources/ .
-        //// They can also be loaded from the root of assets/ .
-        configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
+//// Remove window borders and title bar
+//        configuration.setDecorated(false);
+//
+//// Optional: Center on screen (doesn't matter since it fills whole screen)
+//        configuration.setWindowPosition(0, 0);
+
         return configuration;
     }
 }

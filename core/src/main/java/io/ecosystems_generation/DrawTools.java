@@ -1,11 +1,15 @@
 package io.ecosystems_generation;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class DrawTools {
@@ -15,21 +19,45 @@ public class DrawTools {
     float[][] noise;
     Terrain[][] terrain;
 
+    SpriteBatch batch;
     ShapeRenderer shapeRenderer;
     int GRID_WIDTH;
     int GRID_HEIGHT;
     int TILE_SIZE;
 
+    private Texture tileset;
+    private TextureRegion[][] textureTiles;
+    private TextureRegion[][] terrainTiles;
+    Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
 
-    DrawTools(ShapeRenderer shapeRenderer, int GRID_WIDTH, int GRID_HEIGHT, int TILE_SIZE){
+    DrawTools(SpriteBatch batch, ShapeRenderer shapeRenderer, int GRID_WIDTH, int GRID_HEIGHT, int TILE_SIZE){
+
         this.worldSize = World.getWorldSize();
         this.random = World.getRandom();
         this.noise = World.getNoise();
         this.terrain = World.getTerrain();
+
         this.shapeRenderer = shapeRenderer;
+        this.batch = batch;
         this.GRID_WIDTH = GRID_WIDTH;
         this.GRID_HEIGHT = GRID_HEIGHT;
         this.TILE_SIZE = TILE_SIZE;
+
+        loadTextures();
+        setTextureTiles();
+        }
+
+    private void loadTextures(){
+        tileset = new Texture(Gdx.files.internal("Overworld.png"));
+        textureTiles = TextureRegion.split(tileset, 16, 16); // Slices the image into 16x16 pieces
+        tileLookup.put(TextureName.GRASS_DEFAULT_1, textureTiles[0][0]);
+        tileLookup.put(TextureName.GRASS_DEFAULT_2, textureTiles[9][7]);
+        tileLookup.put(TextureName.GRASS_DEFAULT_3, textureTiles[10][7]);
+        tileLookup.put(TextureName.GRASS_DEFAULT_4, textureTiles[9][8]);
+        tileLookup.put(TextureName.GRASS_DEFAULT_5, textureTiles[10][8]);
+
+
+        tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[7][3]);
     }
 
     public Pixmap getNoisePixmap(){
@@ -103,5 +131,34 @@ public class DrawTools {
             }
         }
         shapeRenderer.end();
+    }
+
+    public void drawTerrain(){
+        batch.begin();
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int y = 0; y < GRID_HEIGHT; y++) {
+                if (World.getTerrain()[x][y].getMaterialType() == Material.GROUND) {
+                    batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE );
+                }
+                if (World.getTerrain()[x][y].getMaterialType() == Material.WATER) {
+                    batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE);
+                }
+            }
+        }
+        batch.end();
+    }
+
+    public void setTextureTiles(){
+        terrainTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int y = 0; y < GRID_HEIGHT; y++) {
+                if (World.getTerrain()[x][y].getMaterialType() == Material.GROUND) {
+                    terrainTiles[x][y] = tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1,6)));
+                }
+                if (World.getTerrain()[x][y].getMaterialType() == Material.WATER) {
+                    terrainTiles[x][y] = tileLookup.get(TextureName.WATER_DEFAULT);
+                }
+            }
+        }
     }
 }

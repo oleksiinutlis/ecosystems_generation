@@ -8,13 +8,15 @@ public class World {
     private static float[][] noise;
 
     private static int worldSize;
+    private static Random random;
 
-    private static final Random random = new Random(7777);
-
-    public World(int size){
+    public World(int size, int seed){
         worldSize = size;
         terrain = new Terrain[worldSize][worldSize];
         entities = new Entity[worldSize][worldSize];
+
+        // fully random if seed is set to 0
+        random = seed == 0 ? new Random() : new Random(seed);
 
         NoiseGenerator noiseGenerator = new NoiseGenerator();
         noise = noiseGenerator.generateSmoothNoise(worldSize);
@@ -54,21 +56,22 @@ public class World {
                     continue;
                 }
 
-                if (f >= 0.45f && f < 0.70f) {
-                    // Tree generation, 1.5% generation chance
-                    if (TerrainUtils.getRandomBoolean(1.5f)) {
-                        terrain[x][y] = new Terrain(Material.TREE);
-                        continue;
-                    }
-                }
+//                if (f >= 0.45f && f < 0.70f) {
+//                    // Tree generation, 1.5% generation chance
+//                    if (TerrainUtils.getRandomBoolean(1.5f)) {
+//                        terrain[x][y] = new Terrain(Material.TREE);
+//                        continue;
+//                    }
+//                }
+//
+//                if (f >= 0.45f && f < 0.65f) {
+//                    // Stone generation, 1.5% generation chance
+//                    if (TerrainUtils.getRandomBoolean(1.5f)) {
+//                        terrain[x][y] = new Terrain(Material.STONE);
+//                        continue;
+//                    }
+//                }
 
-                if (f >= 0.45f && f < 0.65f) {
-                    // Stone generation, 1.5% generation chance
-                    if (TerrainUtils.getRandomBoolean(1.5f)) {
-                        terrain[x][y] = new Terrain(Material.STONE);
-                        continue;
-                    }
-                }
                 // Grass (darker green for higher terrain)
                 terrain[x][y] = new Terrain(Material.GROUND);
             }
@@ -79,7 +82,7 @@ public class World {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                boolean chance = TerrainUtils.getRandomBoolean(30);
+                boolean chance = TerrainUtils.getRandomBoolean(5);
                     if (chance) {
                         this.entities[x][y] = new Prey(0);
                     }
