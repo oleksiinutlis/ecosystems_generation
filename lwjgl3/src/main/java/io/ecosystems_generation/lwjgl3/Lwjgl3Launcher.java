@@ -36,7 +36,7 @@ public class Lwjgl3Launcher {
 //
 //// Set window size to match screen resolution
 //        configuration.setWindowedMode(displayMode.width, displayMode.height);
-
+//
 //// Remove window borders and title bar
 //        configuration.setDecorated(false);
 //

@@ -30,13 +30,13 @@ public class Main extends ApplicationAdapter{
     private static final float ticksPerSecond = 600f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
-    private static final int worldSize = 1024;
-    private static final int WORLD_SEED = 0; // leave 0 for random seed
+    private static final int worldSize = 128;
+    private static final int WORLD_SEED = 7777; // leave 0 for random seed
 
     float speed = 400f;
 
-    private static int GRID_WIDTH;
-    private static int GRID_HEIGHT;
+    private static int GRID_WIDTH = worldSize;
+    private static int GRID_HEIGHT = worldSize;
     private static final int TILE_SIZE = 16;
 
     private OrthographicCamera camera;
@@ -50,8 +50,9 @@ public class Main extends ApplicationAdapter{
     public void create() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        viewport = new FitViewport(worldSize, worldSize);
+        camera.zoom -= 0.5f;
+        viewport = new FitViewport(worldSize * TILE_SIZE, worldSize * TILE_SIZE, camera); // attach camera
+        viewport.apply();  // set up camera correctly
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
 
@@ -62,23 +63,36 @@ public class Main extends ApplicationAdapter{
 
     @Override
     public void resize(int width, int height){
-        //viewport.update(width, height, true);
+        viewport.update(width, height);
     }
 
     @Override
     public void render() {
         float delta = Gdx.graphics.getDeltaTime();
-
+        System.out.println(camera.position.x);
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) camera.translate(-speed * delta, 0);
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) camera.translate(speed * delta, 0);
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) camera.translate(0, speed * delta);
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) camera.translate(0, -speed * delta);
 
+        camera.position.x = Math.max(camera.position.x, camera.zoom * camera.viewportWidth / 2f);
+        camera.position.x = Math.min(camera.position.x, camera.viewportWidth - camera.zoom * camera.viewportWidth / 2f);
+        camera.position.y = Math.max(camera.position.y, camera.zoom * camera.viewportHeight / 2f);
+        camera.position.y = Math.min(camera.position.y, camera.viewportHeight - camera.zoom * camera.viewportHeight / 2f);
+
+
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.02;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.02;
+
+// Clamp zoom
+        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1.0f);
+
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
         drawTool.drawTerrain();
-
+//        drawTool.drawPixmap();
+//        drawTool.drawTiles();
         tick();
     }
 
@@ -101,14 +115,14 @@ public class Main extends ApplicationAdapter{
 
     private void handleTickLogic(){
         tickCount++;
-        System.out.println(TILE_SIZE);
+        //System.out.println(TILE_SIZE);
         // Render the screen every third tick (20 times a second)
         if (tickCount % 3 == 0){
         }
     }
 
     public static void setScreenSize(int screenWidth, int screenHeight){
-        GRID_WIDTH = (int) Math.ceil(screenWidth / (float) TILE_SIZE);
-        GRID_HEIGHT = (int) Math.ceil(screenHeight / (float) TILE_SIZE);
+
     }
+
 }

@@ -64,7 +64,7 @@ public class DrawTools {
         Pixmap pixmap = new Pixmap(worldSize, worldSize, Pixmap.Format.RGBA8888);
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
-               pixmap.drawPixel(x,y, Color.rgba8888(getGridColor(x,y)));
+               pixmap.drawPixel(x, y, Color.rgba8888(getGridColor(x,y)));
             }
         }
         return pixmap;
@@ -101,7 +101,7 @@ public class DrawTools {
         shapeRenderer.end();
     }
 
-    public void drawPixmap(SpriteBatch batch){
+    public void drawPixmap(){
         Pixmap pixmap = getNoisePixmap();
         Texture texture = new Texture(pixmap);
         batch.begin();
@@ -135,10 +135,10 @@ public class DrawTools {
 
     public void drawTerrain(){
         batch.begin();
-        for (int x = 0; x < GRID_WIDTH; x++) {
-            for (int y = 0; y < GRID_HEIGHT; y++) {
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
                 if (World.getTerrain()[x][y].getMaterialType() == Material.GROUND) {
-                    batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE );
+                    batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE);
                 }
                 if (World.getTerrain()[x][y].getMaterialType() == Material.WATER) {
                     batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE);
