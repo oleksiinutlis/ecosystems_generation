@@ -39,6 +39,10 @@ public class World {
         return terrain;
     }
 
+    public Entity[][] getEntities() {
+        return entities;
+    }
+
     private void setTerrain() {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
@@ -75,13 +79,12 @@ public class World {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                boolean chance = TerrainUtils.getChanceCheck(100);
-                if (chance) {
-                    this.entities[x][y] = new Prey(0);
-                }
+                boolean chance = TerrainUtils.getRandomBoolean(30);
+                    if (chance) {
+                        this.entities[x][y] = new Prey(0);
+                    }
                 }
             }
         }
-
     }
 }

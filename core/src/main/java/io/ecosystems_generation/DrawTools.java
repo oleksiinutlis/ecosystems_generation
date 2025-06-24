@@ -15,11 +15,21 @@ public class DrawTools {
     float[][] noise;
     Terrain[][] terrain;
 
-    DrawTools(){
+    ShapeRenderer shapeRenderer;
+    int GRID_WIDTH;
+    int GRID_HEIGHT;
+    int TILE_SIZE;
+
+
+    DrawTools(ShapeRenderer shapeRenderer, int GRID_WIDTH, int GRID_HEIGHT, int TILE_SIZE){
         this.worldSize = World.getWorldSize();
         this.random = World.getRandom();
         this.noise = World.getNoise();
         this.terrain = World.getTerrain();
+        this.shapeRenderer = shapeRenderer;
+        this.GRID_WIDTH = GRID_WIDTH;
+        this.GRID_HEIGHT = GRID_HEIGHT;
+        this.TILE_SIZE = TILE_SIZE;
     }
 
     public Pixmap getNoisePixmap(){
@@ -51,7 +61,7 @@ public class DrawTools {
         return new Color(0,0,0,0f);
     }
 
-    public void drawTiles(ShapeRenderer shapeRenderer, int GRID_WIDTH, int GRID_HEIGHT, int TILE_SIZE){
+    public void drawTiles(){
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -71,4 +81,27 @@ public class DrawTools {
         batch.end();
     }
 
+    public void drawEntities(Entity[][] entities){
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        for (int x = 0; x < entities.length; x++) {
+            if (entities[x] != null) {
+                for (int y = 0; y < entities[x].length; y++) {
+                    if (entities[x][y] != null) {
+                        EntityType entityType = entities[x][y].getType();
+                        switch (entityType) {
+                            case PREY:
+                                shapeRenderer.setColor(1f, 1f, 0f, 1f);
+                                shapeRenderer.circle(x * TILE_SIZE + (float) TILE_SIZE / 2, y * TILE_SIZE + (float) TILE_SIZE / 2, (float) TILE_SIZE / 2);
+                                break;
+                            case PREDATOR:
+                                shapeRenderer.setColor(1f, 0f, 0f, 1f);
+                                shapeRenderer.circle(x * TILE_SIZE + (float) TILE_SIZE / 2, y * TILE_SIZE + (float) TILE_SIZE / 2, (float) TILE_SIZE / 2);
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        shapeRenderer.end();
+    }
 }

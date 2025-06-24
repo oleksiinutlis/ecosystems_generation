@@ -40,7 +40,7 @@ public class Main extends ApplicationAdapter{
         shapeRenderer = new ShapeRenderer();
 
         this.world = new World(worldSize);
-        this.drawTool = new DrawTools();
+        this.drawTool = new DrawTools(shapeRenderer, GRID_WIDTH, GRID_HEIGHT, TILE_SIZE);
         // generates a world and terrain
     }
 
@@ -53,14 +53,9 @@ public class Main extends ApplicationAdapter{
     public void render() {
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
-        handleTickLogic();
-        drawTool.drawTiles(shapeRenderer, GRID_WIDTH, GRID_HEIGHT, TILE_SIZE);
-
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        tick();
+        drawTool.drawTiles();
+        drawTool.drawEntities(world.getEntities());
     }
 
     @Override
@@ -70,19 +65,17 @@ public class Main extends ApplicationAdapter{
         shapeRenderer.dispose();
     }
 
-
-
     // Tick logic
-    public void handleTickLogic(){
+    public void tick(){
         float delta = Gdx.graphics.getDeltaTime();
         tickTimer += delta;
         while (tickTimer >= TICK_INTERVAL){
-            tick();
+            handleTickLogic();
             tickTimer -= TICK_INTERVAL;
         }
     }
 
-    public void tick(){
+    public void handleTickLogic(){
         tickCount++;
     }
 }
