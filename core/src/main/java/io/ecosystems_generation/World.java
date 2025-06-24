@@ -20,6 +20,8 @@ public class World {
         noise = noiseGenerator.generateSmoothNoise(worldSize);
         setTerrain();
         setEntities();
+        EntityHandler handler = new EntityHandler(entities, 0, 59, 0, 36);
+        handler.printZone();
     }
 
 
@@ -76,15 +78,24 @@ public class World {
     }
 
     private void setEntities() {
-        for (int x = 0; x < worldSize; x++) {
-            for (int y = 0; y < worldSize; y++) {
+        
+
+        
+        this.entities[59 / 2][36 / 2] = new Prey(0);
+        int min_x = 59 / 2 - 9;
+        int max_x = 59 / 2 + 9 + 1;
+        int min_y = 36 / 2 - 9;
+        int max_y = 36 / 2 + 9 + 1;
+        for (int x = min_x; x < max_x; x++) {
+            for (int y = min_y; y < max_y; y++) {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                boolean chance = TerrainUtils.getRandomBoolean(30);
+                boolean chance = TerrainUtils.getRandomBoolean(1);
                     if (chance) {
                         this.entities[x][y] = new Prey(0);
                     }
                 }
             }
         }
+        
     }
 }
