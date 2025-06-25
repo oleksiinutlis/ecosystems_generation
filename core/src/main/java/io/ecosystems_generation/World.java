@@ -64,13 +64,13 @@ public class World {
 //                    }
 //                }
 //
-//                if (f >= 0.45f && f < 0.65f) {
-//                    // Stone generation, 1.5% generation chance
-//                    if (TerrainUtils.getRandomBoolean(1.5f)) {
-//                        terrain[x][y] = new Terrain(Material.STONE);
-//                        continue;
-//                    }
-//                }
+                if (f >= 0.45f && f < 0.65f) {
+                    // Stone generation, 1.5% generation chance
+                    if (TerrainUtils.getRandomBoolean(2f)) {
+                        terrain[x][y] = new Terrain(Material.STONE);
+                        continue;
+                    }
+                }
 
                 // Grass (darker green for higher terrain)
                 terrain[x][y] = new Terrain(Material.GROUND);

@@ -27,6 +27,7 @@ public class DrawTools {
 
     private Texture tileset;
     private TextureRegion[][] textureTiles;
+    private TextureRegion[][] extraTiles;
     private TextureRegion[][] terrainTiles;
     Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
 
@@ -45,10 +46,13 @@ public class DrawTools {
 
         loadTextures();
         setTextureTiles();
+        setExtraTiles();
         }
 
     private void loadTextures(){
         tileset = new Texture(Gdx.files.internal("Overworld.png"));
+        tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
         textureTiles = TextureRegion.split(tileset, 16, 16); // Slices the image into 16x16 pieces
         tileLookup.put(TextureName.GRASS_DEFAULT_1, textureTiles[0][0]);
         tileLookup.put(TextureName.GRASS_DEFAULT_2, textureTiles[9][7]);
@@ -56,6 +60,11 @@ public class DrawTools {
         tileLookup.put(TextureName.GRASS_DEFAULT_4, textureTiles[9][8]);
         tileLookup.put(TextureName.GRASS_DEFAULT_5, textureTiles[10][8]);
 
+        tileLookup.put(TextureName.STONE_DEFAULT_1, textureTiles[5][6]);
+        tileLookup.put(TextureName.STONE_DEFAULT_2, textureTiles[5][7]);
+        tileLookup.put(TextureName.STONE_DEFAULT_3, textureTiles[5][8]);
+        tileLookup.put(TextureName.STONE_DEFAULT_4, textureTiles[5][9]);
+        tileLookup.put(TextureName.STONE_DEFAULT_5, textureTiles[5][10]);
 
         tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[7][3]);
     }
@@ -135,13 +144,24 @@ public class DrawTools {
 
     public void drawTerrain(){
         batch.begin();
-        for (int x = 0; x < worldSize; x++) {
-            for (int y = 0; y < worldSize; y++) {
-                if (World.getTerrain()[x][y].getMaterialType() == Material.GROUND) {
-                    batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE);
-                }
-                if (World.getTerrain()[x][y].getMaterialType() == Material.WATER) {
-                    batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE);
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int y = 0; y < GRID_HEIGHT; y++) {
+                batch.draw(terrainTiles[x][y], x * TILE_SIZE, y * TILE_SIZE);
+            }
+        }
+        batch.end();
+    }
+
+    public void drawExtras(){
+        batch.begin();
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int y = 0; y < GRID_HEIGHT; y++) {
+                switch (World.getTerrain()[x][y].getMaterialType()){
+                    case STONE:
+                        TextureRegion textureRegion = extraTiles[x][y];
+                        batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
+                    case TREE:
+                        break;
                 }
             }
         }
@@ -152,11 +172,27 @@ public class DrawTools {
         terrainTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
-                if (World.getTerrain()[x][y].getMaterialType() == Material.GROUND) {
-                    terrainTiles[x][y] = tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1,6)));
+                switch (World.getTerrain()[x][y].getMaterialType()){
+                    case STONE:
+                    case GROUND:
+                        terrainTiles[x][y] = tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1,6)));
+                        continue;
+                    case WATER:
+                        terrainTiles[x][y] = tileLookup.get(TextureName.WATER_DEFAULT);
                 }
-                if (World.getTerrain()[x][y].getMaterialType() == Material.WATER) {
-                    terrainTiles[x][y] = tileLookup.get(TextureName.WATER_DEFAULT);
+            }
+        }
+    }
+
+    public void setExtraTiles(){
+        extraTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int y = 0; y < GRID_HEIGHT; y++) {
+                switch (World.getTerrain()[x][y].getMaterialType()){
+                    case STONE:
+                        TextureName name = TextureName.stoneFromInt(TerrainUtils.getRandomInt(1,6));
+                        TextureRegion textureRegion = tileLookup.get(name);
+                        extraTiles[x][y] = textureRegion;
                 }
             }
         }

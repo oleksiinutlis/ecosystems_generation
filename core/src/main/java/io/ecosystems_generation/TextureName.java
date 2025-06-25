@@ -43,4 +43,22 @@ public enum TextureName {
         }
         return GRASS_DEFAULT_1;
     }
+
+    public static TextureName stoneFromInt(int value){
+        switch (value){
+            case 1:
+                return STONE_DEFAULT_1;
+            case 2:
+                return STONE_DEFAULT_2;
+            case 3:
+                return STONE_DEFAULT_3;
+            case 4:
+                return STONE_DEFAULT_4;
+            case 5:
+                return STONE_DEFAULT_5;
+        }
+        return STONE_DEFAULT_1;
+    }
+
+
 }

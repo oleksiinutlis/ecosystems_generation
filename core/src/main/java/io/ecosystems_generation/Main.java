@@ -30,13 +30,13 @@ public class Main extends ApplicationAdapter{
     private static final float ticksPerSecond = 600f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
-    private static final int worldSize = 128;
+    private static final int worldSize = 1024;
     private static final int WORLD_SEED = 7777; // leave 0 for random seed
 
     float speed = 400f;
 
-    private static int GRID_WIDTH = worldSize;
-    private static int GRID_HEIGHT = worldSize;
+    private static int GRID_WIDTH = 90;
+    private static int GRID_HEIGHT = 50;
     private static final int TILE_SIZE = 16;
 
     private OrthographicCamera camera;
@@ -51,7 +51,8 @@ public class Main extends ApplicationAdapter{
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.zoom -= 0.5f;
-        viewport = new FitViewport(worldSize * TILE_SIZE, worldSize * TILE_SIZE, camera); // attach camera
+
+        viewport = new FitViewport(GRID_WIDTH * 16, GRID_HEIGHT * 16, camera); // attach camera
         viewport.apply();  // set up camera correctly
         batch = new SpriteBatch();
         shapeRenderer = new ShapeRenderer();
@@ -91,6 +92,7 @@ public class Main extends ApplicationAdapter{
         batch.setProjectionMatrix(camera.combined);
 
         drawTool.drawTerrain();
+        drawTool.drawExtras();
 //        drawTool.drawPixmap();
 //        drawTool.drawTiles();
         tick();
@@ -121,8 +123,5 @@ public class Main extends ApplicationAdapter{
         }
     }
 
-    public static void setScreenSize(int screenWidth, int screenHeight){
-
-    }
 
 }
