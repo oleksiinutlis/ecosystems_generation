@@ -8,9 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 public class DrawTools {
 
@@ -29,10 +27,19 @@ public class DrawTools {
     private TextureRegion[][] textureTiles;
     private TextureRegion[][] extraTiles;
     private TextureRegion[][] terrainTiles;
-    Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
+
+        Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
+
+    private static final int TOP         = 1 << 0; // 0000 0001
+    private static final int BOTTOM      = 1 << 1; // 0000 0010
+    private static final int LEFT        = 1 << 2; // 0000 0100
+    private static final int RIGHT       = 1 << 3; // 0000 1000
+    private static final int TOP_LEFT    = 1 << 4; // 0001 0000
+    private static final int TOP_RIGHT   = 1 << 5; // 0010 0000
+    private static final int BOTTOM_LEFT = 1 << 6; // 0100 0000
+    private static final int BOTTOM_RIGHT= 1 << 7; // 1000 0000
 
     DrawTools(SpriteBatch batch, ShapeRenderer shapeRenderer, int GRID_WIDTH, int GRID_HEIGHT, int TILE_SIZE){
-
         this.worldSize = World.getWorldSize();
         this.random = World.getRandom();
         this.noise = World.getNoise();
@@ -45,7 +52,7 @@ public class DrawTools {
         this.TILE_SIZE = TILE_SIZE;
 
         loadTextures();
-        setTextureTiles();
+        setTerrainTiles();
         setExtraTiles();
         }
 
@@ -59,6 +66,21 @@ public class DrawTools {
         tileLookup.put(TextureName.GRASS_DEFAULT_3, textureTiles[10][7]);
         tileLookup.put(TextureName.GRASS_DEFAULT_4, textureTiles[9][8]);
         tileLookup.put(TextureName.GRASS_DEFAULT_5, textureTiles[10][8]);
+
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_LEFT, textureTiles[7][4]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_RIGHT, textureTiles[7][2]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_TOP, textureTiles[8][3]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_BOTTOM, textureTiles[6][3]);
+
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_TOP_LEFT, textureTiles[9][2]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_TOP_RIGHT, textureTiles[9][3]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_BOTTOM_LEFT, textureTiles[10][2]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_BOTTOM_RIGHT, textureTiles[10][3]);
+
+        tileLookup.put(TextureName.GRASS_WATER_INNER_TOP_LEFT, textureTiles[8][4]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_TOP_RIGHT, textureTiles[8][2]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_LEFT, textureTiles[6][4]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_RIGHT, textureTiles[6][2]);
 
         tileLookup.put(TextureName.STONE_DEFAULT_1, textureTiles[5][6]);
         tileLookup.put(TextureName.STONE_DEFAULT_2, textureTiles[5][7]);
@@ -156,7 +178,7 @@ public class DrawTools {
         batch.begin();
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
-                switch (World.getTerrain()[x][y].getMaterialType()){
+                switch (terrain[x][y].getMaterialType()){
                     case STONE:
                         TextureRegion textureRegion = extraTiles[x][y];
                         batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
@@ -168,27 +190,30 @@ public class DrawTools {
         batch.end();
     }
 
-    public void setTextureTiles(){
+    public void setTerrainTiles(){
         terrainTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
-                switch (World.getTerrain()[x][y].getMaterialType()){
+                switch (terrain[x][y].getMaterialType()){
                     case STONE:
-                    case GROUND:
                         terrainTiles[x][y] = tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1,6)));
-                        continue;
+                        break;
+                    case GROUND:
+                        setGroundTile(x,y);
+                        break;
                     case WATER:
                         terrainTiles[x][y] = tileLookup.get(TextureName.WATER_DEFAULT);
+                        break;
                 }
             }
         }
     }
 
-    public void setExtraTiles(){
+    private void setExtraTiles(){
         extraTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
-                switch (World.getTerrain()[x][y].getMaterialType()){
+                switch (terrain[x][y].getMaterialType()){
                     case STONE:
                         TextureName name = TextureName.stoneFromInt(TerrainUtils.getRandomInt(1,6));
                         TextureRegion textureRegion = tileLookup.get(name);
@@ -196,5 +221,60 @@ public class DrawTools {
                 }
             }
         }
+    }
+
+    private void setGroundTile(int x, int y){
+        int mask = getWaterMask(x, y);
+        terrainTiles[x][y] = getTileFromMask(mask);
+    }
+
+    private int getWaterMask(int x, int y){
+        int mask = 0;
+
+        if (x > 0 && terrain[x - 1][y].getMaterialType() == Material.WATER) mask |= LEFT;
+        if (x < GRID_WIDTH - 1 && terrain[x + 1][y].getMaterialType() == Material.WATER) mask |= RIGHT;
+        if (y > 0 && terrain[x][y - 1].getMaterialType() == Material.WATER) mask |= BOTTOM;
+        if (y < GRID_HEIGHT - 1 && terrain[x][y + 1].getMaterialType() == Material.WATER) mask |= TOP;
+        if (x > 0 && y > 0 && terrain[x - 1][y - 1].getMaterialType() == Material.WATER) mask |= BOTTOM_LEFT;
+        if (x < GRID_WIDTH - 1 && y > 0 && terrain[x + 1][y - 1].getMaterialType() == Material.WATER) mask |= BOTTOM_RIGHT;
+        if (x > 0 && y < GRID_HEIGHT - 1 && terrain[x - 1][y + 1].getMaterialType() == Material.WATER) mask |= TOP_LEFT;
+        if (x < GRID_WIDTH - 1 && y < GRID_HEIGHT - 1 && terrain[x + 1][y + 1].getMaterialType() == Material.WATER) mask |= TOP_RIGHT;
+
+        return mask;
+    }
+
+    private TextureRegion getTileFromMask(int mask) {
+        // Outer corners
+        if ((mask & (LEFT | TOP | TOP_LEFT)) == (LEFT | TOP | TOP_LEFT))
+            return tileLookup.get(TextureName.GRASS_WATER_OUTER_TOP_LEFT);
+        if ((mask & (LEFT | BOTTOM | BOTTOM_LEFT)) == (LEFT | BOTTOM | BOTTOM_LEFT))
+            return tileLookup.get(TextureName.GRASS_WATER_OUTER_BOTTOM_LEFT);
+        if ((mask & (RIGHT | TOP | TOP_RIGHT)) == (RIGHT | TOP | TOP_RIGHT))
+            return tileLookup.get(TextureName.GRASS_WATER_OUTER_TOP_RIGHT);
+        if ((mask & (RIGHT | BOTTOM | BOTTOM_RIGHT)) == (RIGHT | BOTTOM | BOTTOM_RIGHT))
+            return tileLookup.get(TextureName.GRASS_WATER_OUTER_BOTTOM_RIGHT);
+
+        // Edges
+        if ((mask & LEFT) == LEFT)
+            return tileLookup.get(TextureName.GRASS_WATER_EDGE_LEFT);
+        if ((mask & RIGHT) == RIGHT)
+            return tileLookup.get(TextureName.GRASS_WATER_EDGE_RIGHT);
+        if ((mask & TOP) == TOP)
+            return tileLookup.get(TextureName.GRASS_WATER_EDGE_TOP);
+        if ((mask & BOTTOM) == BOTTOM)
+            return tileLookup.get(TextureName.GRASS_WATER_EDGE_BOTTOM);
+
+        // Inner corners
+        if ((mask & TOP_LEFT) == TOP_LEFT)
+            return tileLookup.get(TextureName.GRASS_WATER_INNER_TOP_LEFT);
+        if ((mask & TOP_RIGHT) == TOP_RIGHT)
+            return tileLookup.get(TextureName.GRASS_WATER_INNER_TOP_RIGHT);
+        if ((mask & BOTTOM_LEFT) == BOTTOM_LEFT)
+            return tileLookup.get(TextureName.GRASS_WATER_INNER_BOTTOM_LEFT);
+        if ((mask & BOTTOM_RIGHT) == BOTTOM_RIGHT)
+            return tileLookup.get(TextureName.GRASS_WATER_INNER_BOTTOM_RIGHT);
+
+        // Default tile
+        return tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1, 6)));
     }
 }

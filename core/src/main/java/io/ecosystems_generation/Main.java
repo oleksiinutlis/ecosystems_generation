@@ -82,8 +82,8 @@ public class Main extends ApplicationAdapter{
         camera.position.y = Math.min(camera.position.y, camera.viewportHeight - camera.zoom * camera.viewportHeight / 2f);
 
 
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.02;
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.02;
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.01;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.01;
 
 // Clamp zoom
         camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1.0f);
