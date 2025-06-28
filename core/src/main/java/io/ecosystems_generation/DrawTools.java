@@ -52,8 +52,8 @@ public class DrawTools {
         this.TILE_SIZE = TILE_SIZE;
 
         loadTextures();
-        setTerrainTiles();
-        setExtraTiles();
+        setTerrainTextures();
+        setExtraTextures();
         }
 
     private void loadTextures(){
@@ -190,7 +190,7 @@ public class DrawTools {
         batch.end();
     }
 
-    public void setTerrainTiles(){
+    public void setTerrainTextures(){
         terrainTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -209,7 +209,7 @@ public class DrawTools {
         }
     }
 
-    private void setExtraTiles(){
+    private void setExtraTextures(){
         extraTiles = new TextureRegion[GRID_WIDTH][GRID_HEIGHT];
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
@@ -231,6 +231,7 @@ public class DrawTools {
     private int getWaterMask(int x, int y){
         int mask = 0;
 
+        // Check the adjusting tiles for water (for texture setup)
         if (x > 0 && terrain[x - 1][y].getMaterialType() == Material.WATER) mask |= LEFT;
         if (x < GRID_WIDTH - 1 && terrain[x + 1][y].getMaterialType() == Material.WATER) mask |= RIGHT;
         if (y > 0 && terrain[x][y - 1].getMaterialType() == Material.WATER) mask |= BOTTOM;
