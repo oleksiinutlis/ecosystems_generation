@@ -3,6 +3,7 @@ package io.ecosystems_generation;
 public enum TextureName {
     WATER_DEFAULT,
 
+    TREE_PLACEHOLDER,
     STONE_DEFAULT_1,
     STONE_DEFAULT_2,
     STONE_DEFAULT_3,

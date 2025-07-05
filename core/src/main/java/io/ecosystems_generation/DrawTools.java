@@ -28,7 +28,7 @@ public class DrawTools {
     private TextureRegion[][] extraTiles;
     private TextureRegion[][] terrainTiles;
 
-        Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
+    Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
 
     private static final int TOP         = 1 << 0; // 0000 0001
     private static final int BOTTOM      = 1 << 1; // 0000 0010
@@ -89,6 +89,10 @@ public class DrawTools {
         tileLookup.put(TextureName.STONE_DEFAULT_5, textureTiles[5][10]);
 
         tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[7][3]);
+
+        // TODO: REPLACE TREE
+        // stone for now, no tree textures yet
+        tileLookup.put(TextureName.TREE_PLACEHOLDER, textureTiles[5][6]);
     }
 
     public Pixmap getNoisePixmap(){
@@ -225,7 +229,19 @@ public class DrawTools {
 
     private void setGroundTile(int x, int y){
         int mask = getWaterMask(x, y);
-        terrainTiles[x][y] = getTileFromMask(mask);
+        if (!isValidTexture(mask)){
+            // We don't have textures for ground surrounded by 4+ water tiles, hence replace the texture
+            replaceTile(x, y, Material.WATER);
+            terrainTiles[x][y] = tileLookup.get(TextureName.WATER_DEFAULT);
+            return;
+        }
+        terrainTiles[x][y] = getTileFromMask(mask, x, y);
+    }
+
+
+    private void replaceTile(int x, int y, Material replaceMaterial){
+        World.setTerrainTile(x, y, replaceMaterial);
+        this.terrain[x][y].setMaterialType(replaceMaterial);
     }
 
     private int getWaterMask(int x, int y){
@@ -244,7 +260,7 @@ public class DrawTools {
         return mask;
     }
 
-    private TextureRegion getTileFromMask(int mask) {
+    private TextureRegion getTileFromMask(int mask, int x, int y) {
         // Outer corners
         if ((mask & (LEFT | TOP | TOP_LEFT)) == (LEFT | TOP | TOP_LEFT))
             return tileLookup.get(TextureName.GRASS_WATER_OUTER_TOP_LEFT);
@@ -277,5 +293,42 @@ public class DrawTools {
 
         // Default tile
         return tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1, 6)));
+
+    }
+
+    private boolean isValidTexture(int mask){
+        if (countBits(mask) > 5) return false;
+
+        int TOP_RIGHT_SIDE = TOP_RIGHT | RIGHT | TOP;
+        int TOP_LEFT_SIDE = TOP_LEFT | LEFT | TOP;
+        int BOTTOM_RIGHT_SIDE = BOTTOM_RIGHT | RIGHT | BOTTOM;
+        int BOTTOM_LEFT_SIDE = BOTTOM_LEFT | LEFT | BOTTOM;
+
+        if ((mask & (TOP_RIGHT_SIDE | TOP_LEFT_SIDE)) == (TOP_RIGHT_SIDE | TOP_LEFT_SIDE)){
+            return false;
+        }
+
+        if ((mask & (TOP_RIGHT_SIDE | BOTTOM_RIGHT_SIDE)) == (TOP_RIGHT_SIDE | BOTTOM_RIGHT_SIDE)){
+            return false;
+        }
+
+        if ((mask & (BOTTOM_RIGHT_SIDE | BOTTOM_LEFT_SIDE)) == (BOTTOM_RIGHT_SIDE | BOTTOM_LEFT_SIDE)){
+            return false;
+        }
+
+        if ((mask & (BOTTOM_LEFT_SIDE | TOP_LEFT_SIDE)) == (BOTTOM_LEFT_SIDE | TOP_LEFT_SIDE)){
+            return false;
+        }
+
+        return true;
+    }
+
+    private int countBits (int mask){
+        int res = 0;
+        while (mask != 0){
+            if ((mask & 1) == 1) res++;
+            mask >>= 1;
+        }
+        return res;
     }
 }

@@ -30,8 +30,8 @@ public class Main extends ApplicationAdapter{
     float speed = 400f;
 
 
-    private static int WORLD_WIDTH = 1000;
-    private static int WORLD_HEIGHT = 1000;
+    private static int WORLD_WIDTH = 500;
+    private static int WORLD_HEIGHT = 500;
 
     private static int GRID_VISIBLE_WIDTH = 250;
     private static int GRID_VISIBLE_HEIGHT = 140;

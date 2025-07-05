@@ -1,5 +1,7 @@
 package io.ecosystems_generation;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Random;
 
 public class World {
@@ -9,6 +11,8 @@ public class World {
 
     private static int worldSize;
     private static Random random;
+
+    private Queue<Terrain> terrainQueue = new LinkedList<>();
 
     public World(int size, int seed){
         worldSize = size;
@@ -49,33 +53,31 @@ public class World {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 float f = noise[x][y];
-
+                Material material = Material.GROUND; // default value ground
                 if (f < 0.40f) {
-                    // Water (darker blue for deeper)
-                    terrain[x][y] = new Terrain(Material.WATER);
-                    continue;
+                    material = Material.WATER;
                 }
-
-//                if (f >= 0.45f && f < 0.70f) {
-//                    // Tree generation, 1.5% generation chance
-//                    if (TerrainUtils.getRandomBoolean(1.5f)) {
-//                        terrain[x][y] = new Terrain(Material.TREE);
-//                        continue;
-//                    }
-//                }
-//
-                if (f >= 0.45f && f < 0.65f) {
+                else if (f >= 0.45f && f < 0.65f) {
                     // Stone generation, 1.5% generation chance
                     if (TerrainUtils.getRandomBoolean(2f)) {
-                        terrain[x][y] = new Terrain(Material.STONE);
-                        continue;
+                        material = Material.STONE;
                     }
                 }
 
                 // Grass (darker green for higher terrain)
-                terrain[x][y] = new Terrain(Material.GROUND);
+                terrain[x][y] = new Terrain(material, x, y);
             }
         }
+        terrainCleanup();
+    }
+
+    private void terrainCleanup(){
+
+    }
+
+    private int getChunkArea(Terrain terrain){
+        terrain.markAsChecked();
+        return 0;
     }
 
     private void setEntities() {
@@ -89,5 +91,9 @@ public class World {
                 }
             }
         }
+    }
+
+    public static void setTerrainTile(int x, int y, Material materialType){
+        terrain[x][y].setMaterialType(materialType);
     }
 }
