@@ -77,6 +77,21 @@ public class Animal {
         return cantor(parentId, other_parentId);
     }
 
+    public request give_current_request() {
+
+        return request.MOVE;   
+    }
+
+
+
+    public enum RequestType {
+        MOVE,
+        SENSE,
+        BREED,
+        EAT
+    }
+
+    
     // A(x,y) = (x^2 + x + 2xy + 3y + y^2) / 2
     // Cantor pairing function
     public int cantor(int x, int y){
