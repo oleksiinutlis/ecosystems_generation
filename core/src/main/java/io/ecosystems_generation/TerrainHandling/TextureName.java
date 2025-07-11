@@ -12,6 +12,12 @@ public enum TextureName {
     DECORATION_DEFAULT_4,
     DECORATION_DEFAULT_5,
     DECORATION_DEFAULT_6,
+
+    DECORATION_LILY_PAD_0,
+    DECORATION_LILY_PAD_1,
+    DECORATION_LILY_PAD_2,
+    DECORATION_LILY_PAD_3,
+
     BUSH_0,
     BUSH_1,
 
@@ -37,7 +43,10 @@ public enum TextureName {
     CARROT,
 
     BOAR,
-    RABBIT;
+    CHICKEN_0,
+    CHICKEN_1,
+    CHICKEN_2,
+    CHICKEN_3;
 
     private static final TextureName[] DECORATION_DEFAULTS = {
         DECORATION_DEFAULT_0,
@@ -51,6 +60,13 @@ public enum TextureName {
         BUSH_1,
     };
 
+    private static final TextureName[] DECORATION_LILY_PADS = new TextureName[]{
+            DECORATION_LILY_PAD_0,
+            DECORATION_LILY_PAD_1,
+            DECORATION_LILY_PAD_2,
+            DECORATION_LILY_PAD_3,
+    };
+
     private static final TextureName[] GRASS_DEFAULTS = {
         GRASS_DEFAULT_1,
         GRASS_DEFAULT_2,
@@ -59,8 +75,27 @@ public enum TextureName {
         GRASS_DEFAULT_5,
     };
 
+    private static final TextureName[] CHICKEN_TEXTURES = {
+            CHICKEN_0,
+            CHICKEN_1,
+            CHICKEN_2,
+            CHICKEN_3,
+    };
+
     public static TextureName[] getDecorations(){
         return DECORATION_DEFAULTS;
+    }
+
+    public static TextureName[] getWaterDecoration(){
+        return DECORATION_LILY_PADS;
+    }
+
+    public static TextureName[] getChickenTextures(){
+        return CHICKEN_TEXTURES;
+    }
+
+    public static int getWaterDecorationSize(){
+        return DECORATION_LILY_PADS.length;
     }
 
     public static int getDecorationSize(){
@@ -77,5 +112,8 @@ public enum TextureName {
         return DECORATION_DEFAULT_1;
     }
 
-
+    public static TextureName waterDecorationFromInt(int value){
+        if (value >= 0 && value < getWaterDecorationSize()) return DECORATION_LILY_PADS[value];
+        return DECORATION_LILY_PAD_0;
+    }
 }

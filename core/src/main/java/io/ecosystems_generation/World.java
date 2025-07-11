@@ -71,7 +71,7 @@ public class World {
             for (int y = 0; y < worldSize; y++) {
                 float f = noise[x][y];
                 Material material = Material.GROUND; // default value ground
-                if (f < 0.35f) {
+                if (f < 0.40f) {
                     material = Material.WATER;
                 }
                 else if (f >= 0.45f && f < 0.65f) {
@@ -151,6 +151,12 @@ public class World {
                     boolean chance = TerrainUtils.getRandomBoolean(0.5f);
                     if (chance) {
                         entities[x][y] = new Predator(0);
+                    }
+
+                    //TODO entity setting
+                    chance = TerrainUtils.getRandomBoolean(0.5f);
+                    if (chance) {
+                        entities[x][y] = new Prey(0);
                     }
                 }
             }
