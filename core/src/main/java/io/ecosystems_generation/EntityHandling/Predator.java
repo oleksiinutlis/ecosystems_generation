@@ -1,7 +1,7 @@
-package io.ecosystems_generation;
+package io.ecosystems_generation.EntityHandling;
 
 
-public class Predator extends Animal  implements Entity{
+public class Predator extends Animal implements Entity {
     public EntityType getType() {
         return EntityType.PREDATOR;
     }
@@ -12,6 +12,8 @@ public class Predator extends Animal  implements Entity{
         // predator specific constructor components go here
     }
 
-
+    public Predator(int animalId){
+        super(animalId);
+    }
 }
 

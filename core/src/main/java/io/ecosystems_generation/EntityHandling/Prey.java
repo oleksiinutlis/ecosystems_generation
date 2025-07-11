@@ -1,7 +1,7 @@
-package io.ecosystems_generation;
+package io.ecosystems_generation.EntityHandling;
 
 
-public class Prey extends Animal implements Entity{
+public class Prey extends Animal implements Entity {
 
     @Override
     public EntityType getType() {

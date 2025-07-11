@@ -1,6 +1,4 @@
-package io.ecosystems_generation;
-
-import java.util.ArrayList;
+package io.ecosystems_generation.TerrainHandling;
 
 public class Terrain {
     private Material materialType;

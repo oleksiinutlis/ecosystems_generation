@@ -23,18 +23,22 @@ public class Main extends ApplicationAdapter{
     private static final float ticksPerSecond = 600f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
-    private static final int worldSize = 1024;
+    // Game parameters
+    private static final int foodGenPerSecond = 125;
+
+    private static final int worldSize = 250;
     private static final int WORLD_SEED = 7777; // leave 0 for random seed
 
     // camera panning speed
     float speed = 400f;
 
 
-    private static int WORLD_WIDTH = 500;
-    private static int WORLD_HEIGHT = 500;
+    private static int WORLD_WIDTH = 250;
+    private static int WORLD_HEIGHT = 250;
 
     private static int GRID_VISIBLE_WIDTH = 250;
     private static int GRID_VISIBLE_HEIGHT = 140;
+
 
     private static final int TILE_SIZE = 16;
 
@@ -51,7 +55,7 @@ public class Main extends ApplicationAdapter{
     public void create() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.zoom -= 0.5f;
+        camera.zoom -= 0.7f;
 
         viewport = new FitViewport(GRID_VISIBLE_WIDTH * 16, GRID_VISIBLE_HEIGHT * 16, camera); // attach camera
         viewport.apply();  // set up camera correctly
@@ -70,32 +74,15 @@ public class Main extends ApplicationAdapter{
 
     @Override
     public void render() {
-        deltaTime = Gdx.graphics.getDeltaTime();
-
-        // camera movement
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) camera.translate(-speed * deltaTime, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) camera.translate(speed * deltaTime, 0);
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) camera.translate(0, speed * deltaTime);
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) camera.translate(0, -speed * deltaTime);
-
-        // camera clamp logic to make sure it is in bounds
-        camera.position.x = Math.max(camera.position.x, camera.zoom * camera.viewportWidth / 2f);
-        camera.position.x = Math.min(camera.position.x, camera.viewportWidth - camera.zoom * camera.viewportWidth / 2f);
-        camera.position.y = Math.max(camera.position.y, camera.zoom * camera.viewportHeight / 2f);
-        camera.position.y = Math.min(camera.position.y, camera.viewportHeight - camera.zoom * camera.viewportHeight / 2f);
-
-        // zoom logic
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.01;
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.01;
-
-        // zoom clamp
-        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1.0f);
-
+        handleCameraMovement();
+        handleCameraZoom();
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
+
         drawTool.drawTerrain();
         drawTool.drawExtras();
+        drawTool.drawEntities(World.getEntities());
 
         // world tick, everything synced to this
         tick();
@@ -119,12 +106,38 @@ public class Main extends ApplicationAdapter{
 
     private void handleTickLogic(){
         tickCount++;
-        //System.out.println(TILE_SIZE);
-        // Render the screen every third tick (20 times a second)
-        if (tickCount % 3 == 0){
-
-        }
+        addFood();
     }
 
+    private void handleCameraMovement(){
+        deltaTime = Gdx.graphics.getDeltaTime();
+
+        // camera movement
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) camera.translate(-speed * deltaTime, 0);
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) camera.translate(speed * deltaTime, 0);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) camera.translate(0, speed * deltaTime);
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) camera.translate(0, -speed * deltaTime);
+    }
+
+    private void handleCameraZoom(){
+        // camera clamp logic to make sure it is in bounds
+        camera.position.x = Math.max(camera.position.x, camera.zoom * camera.viewportWidth / 2f);
+        camera.position.x = Math.min(camera.position.x, camera.viewportWidth - camera.zoom * camera.viewportWidth / 2f);
+        camera.position.y = Math.max(camera.position.y, camera.zoom * camera.viewportHeight / 2f);
+        camera.position.y = Math.min(camera.position.y, camera.viewportHeight - camera.zoom * camera.viewportHeight / 2f);
+
+        // zoom logic
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.007f;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.007f;
+
+        // zoom clamp
+        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1.0f);
+    }
+
+    private void addFood(){
+        if ((tickCount % (int) (ticksPerSecond / foodGenPerSecond)) == 0){
+            World.addFood();
+        }
+    }
 
 }

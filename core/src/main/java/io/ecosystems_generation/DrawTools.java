@@ -7,6 +7,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import io.ecosystems_generation.EntityHandling.Entity;
+import io.ecosystems_generation.EntityHandling.EntityType;
+import io.ecosystems_generation.TerrainHandling.Material;
+import io.ecosystems_generation.TerrainHandling.Terrain;
+import io.ecosystems_generation.TerrainHandling.TerrainUtils;
+import io.ecosystems_generation.TerrainHandling.TextureName;
 
 import java.util.*;
 
@@ -23,8 +29,6 @@ public class DrawTools {
     int GRID_HEIGHT;
     int TILE_SIZE;
 
-    private Texture tileset;
-    private TextureRegion[][] textureTiles;
     private TextureRegion[][] extraTiles;
     private TextureRegion[][] terrainTiles;
 
@@ -51,16 +55,19 @@ public class DrawTools {
         this.GRID_HEIGHT = GRID_HEIGHT;
         this.TILE_SIZE = TILE_SIZE;
 
-        loadTextures();
+        loadTerrainTextures();
+        loadEntityTextures();
         setTerrainTextures();
         setExtraTextures();
         }
 
-    private void loadTextures(){
-        tileset = new Texture(Gdx.files.internal("Overworld.png"));
+    private void loadTerrainTextures(){
+        Texture tileset = new Texture(Gdx.files.internal("Overworld.png"));
         tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
-        textureTiles = TextureRegion.split(tileset, 16, 16); // Slices the image into 16x16 pieces
+        // Slices the image into 16x16 pieces
+        TextureRegion[][] textureTiles = TextureRegion.split(tileset, 16, 16);
+
         tileLookup.put(TextureName.GRASS_DEFAULT_1, textureTiles[0][0]);
         tileLookup.put(TextureName.GRASS_DEFAULT_2, textureTiles[9][7]);
         tileLookup.put(TextureName.GRASS_DEFAULT_3, textureTiles[10][7]);
@@ -82,17 +89,41 @@ public class DrawTools {
         tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_LEFT, textureTiles[6][4]);
         tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_RIGHT, textureTiles[6][2]);
 
-        tileLookup.put(TextureName.STONE_DEFAULT_1, textureTiles[5][6]);
-        tileLookup.put(TextureName.STONE_DEFAULT_2, textureTiles[5][7]);
-        tileLookup.put(TextureName.STONE_DEFAULT_3, textureTiles[5][8]);
-        tileLookup.put(TextureName.STONE_DEFAULT_4, textureTiles[5][9]);
-        tileLookup.put(TextureName.STONE_DEFAULT_5, textureTiles[5][10]);
+        loadStoneTexture();
 
         tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[7][3]);
 
         // TODO: REPLACE TREE
         // stone for now, no tree textures yet
         tileLookup.put(TextureName.TREE_PLACEHOLDER, textureTiles[5][6]);
+    }
+
+    private void loadStoneTexture(){
+        Texture tileset = new Texture(Gdx.files.internal("tileset.png"));
+        tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        TextureName[] decorations = TextureName.getDecorations();
+        for (int x = 0; x < 5; x++) {
+            tileLookup.put(decorations[x], new TextureRegion(tileset, x * 16, 80, 16, 16));
+        }
+        tileLookup.put(TextureName.DECORATION_DEFAULT_5, new TextureRegion(tileset, 128, 80, 16, 16));
+        tileLookup.put(TextureName.DECORATION_DEFAULT_6, new TextureRegion(tileset, 160, 80, 16, 16));
+        tileLookup.put(TextureName.BUSH_0, new TextureRegion(tileset, 224, 80, 16, 16));
+        tileLookup.put(TextureName.BUSH_1, new TextureRegion(tileset, 240, 80, 16, 16));
+
+    }
+
+    private void loadEntityTextures(){
+        Texture tileset = new Texture(Gdx.files.internal("boar_animations.png"));
+        tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        TextureRegion boarRegion = new TextureRegion(tileset, 0, 0, 48, 32);
+        tileLookup.put(TextureName.BOAR, boarRegion);
+
+        Texture newTileset = new Texture(Gdx.files.internal("food.png"));
+        tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+        TextureRegion carrotRegion = new TextureRegion(newTileset, 112, 128, 16, 16);
+        tileLookup.put(TextureName.CARROT, carrotRegion);
     }
 
     public Pixmap getNoisePixmap(){
@@ -114,7 +145,7 @@ public class DrawTools {
                 return new Color(0f, 0f, blueShade, 1f);
             case TREE:
                 return new Color(0.59f, 0.29f, 0.0f, 1f); // Reddish brown
-            case STONE:
+            case DECORATION:
                 return new Color(0.502f, 0.502f, 0.502f, 1f); // SlateGray
             case GROUND:
                 float greenShade = 1.0f - ((f - 0.30f) / 0.70f); // higher = darker
@@ -145,7 +176,7 @@ public class DrawTools {
     }
 
     public void drawEntities(Entity[][] entities){
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        batch.begin();
         for (int x = 0; x < entities.length; x++) {
             if (entities[x] != null) {
                 for (int y = 0; y < entities[x].length; y++) {
@@ -153,19 +184,16 @@ public class DrawTools {
                         EntityType entityType = entities[x][y].getType();
                         switch (entityType) {
                             case PREY:
-                                shapeRenderer.setColor(1f, 1f, 0f, 1f);
-                                shapeRenderer.circle(x * TILE_SIZE + (float) TILE_SIZE / 2, y * TILE_SIZE + (float) TILE_SIZE / 2, (float) TILE_SIZE / 2);
                                 break;
                             case PREDATOR:
-                                shapeRenderer.setColor(1f, 0f, 0f, 1f);
-                                shapeRenderer.circle(x * TILE_SIZE + (float) TILE_SIZE / 2, y * TILE_SIZE + (float) TILE_SIZE / 2, (float) TILE_SIZE / 2);
+                                batch.draw(tileLookup.get(TextureName.BOAR), x * TILE_SIZE - 10, y * TILE_SIZE - 10, 48, 32);
                                 break;
                         }
                     }
                 }
             }
         }
-        shapeRenderer.end();
+        batch.end();
     }
 
     public void drawTerrain(){
@@ -183,12 +211,19 @@ public class DrawTools {
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
                 switch (terrain[x][y].getMaterialType()){
-                    case STONE:
+                    case DECORATION:
                         TextureRegion textureRegion = extraTiles[x][y];
                         batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
+                        break;
                     case TREE:
                         break;
                 }
+
+                if (World.checkForFood(x,y) && isNearWater(x,y)){
+                    TextureRegion textureRegion = tileLookup.get(TextureName.CARROT);
+                    batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
+                }
+
             }
         }
         batch.end();
@@ -199,7 +234,7 @@ public class DrawTools {
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
                 switch (terrain[x][y].getMaterialType()){
-                    case STONE:
+                    case DECORATION:
                         terrainTiles[x][y] = tileLookup.get(TextureName.grassFromInt(TerrainUtils.getRandomInt(1,6)));
                         break;
                     case GROUND:
@@ -218,8 +253,8 @@ public class DrawTools {
         for (int x = 0; x < GRID_WIDTH; x++) {
             for (int y = 0; y < GRID_HEIGHT; y++) {
                 switch (terrain[x][y].getMaterialType()){
-                    case STONE:
-                        TextureName name = TextureName.stoneFromInt(TerrainUtils.getRandomInt(1,6));
+                    case DECORATION:
+                        TextureName name = TextureName.decorationFromInt(TerrainUtils.getRandomInt(1,TextureName.getDecorationSize()));
                         TextureRegion textureRegion = tileLookup.get(name);
                         extraTiles[x][y] = textureRegion;
                 }
@@ -330,5 +365,9 @@ public class DrawTools {
             mask >>= 1;
         }
         return res;
+    }
+
+    public boolean isNearWater(int x, int y){
+        return countBits(getWaterMask(x,y)) == 0;
     }
 }
