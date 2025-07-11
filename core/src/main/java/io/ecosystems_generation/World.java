@@ -16,9 +16,8 @@ public class World {
     private static boolean[][] foodMap;
     private static Terrain[][] terrain;
     private static float[][] noise;
-
-    private static int worldSize;
     private static Random random;
+    private static int worldSize;
     private Queue<Terrain> terrainQueue = new LinkedList<>();
 
     public World(int size, int seed){
@@ -34,7 +33,8 @@ public class World {
         noise = noiseGenerator.generateSmoothNoise(worldSize);
         setTerrain();
         setEntities();
-
+        EntityHandler handler = new EntityHandler(entities, 0, 59, 0, 36);
+        handler.printZone();
     }
 
 
@@ -64,7 +64,9 @@ public class World {
                 float f = noise[x][y];
                 Material material = Material.GROUND; // default value ground
                 if (f < 0.40f) {
-                    material = Material.WATER;
+                    // Water (darker blue for deeper)
+                    terrain[x][y] = new Terrain(Material.WATER);
+                    continue;
                 }
                 else if (f >= 0.45f && f < 0.65f) {
                     // Decoration generation, 5% generation chance
@@ -73,6 +75,13 @@ public class World {
                     }
                 }
 
+                if (f >= 0.45f && f < 0.65f) {
+                    // Stone generation, 1.5% generation chance
+                    if (TerrainUtils.getRandomBoolean(1.5f)) {
+                        terrain[x][y] = new Terrain(Material.STONE);
+                        continue;
+                    }
+                }
                 // Grass (darker green for higher terrain)
                 terrain[x][y] = new Terrain(material, x, y);
             }
@@ -90,38 +99,23 @@ public class World {
     }
 
     private void setEntities() {
-        for (int x = 0; x < worldSize; x++) {
-            for (int y = 0; y < worldSize; y++) {
+
+
+
+        this.entities[59 / 2][36 / 2] = new Prey(0);
+        int min_x = 59 / 2 - 9;
+        int max_x = 59 / 2 + 9 + 1;
+        int min_y = 36 / 2 - 9;
+        int max_y = 36 / 2 + 9 + 1;
+        for (int x = min_x; x < max_x; x++) {
+            for (int y = min_y; y < max_y; y++) {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                boolean chance = TerrainUtils.getRandomBoolean(0.5f);
+                boolean chance = TerrainUtils.getRandomBoolean(1);
                     if (chance) {
-                        this.entities[x][y] = new Predator(0);
+                        this.entities[x][y] = new Prey(0);
                     }
                 }
             }
         }
-    }
-
-    public static void setTerrainTile(int x, int y, Material materialType){
-        terrain[x][y].setMaterialType(materialType);
-    }
-
-    public static void addFood(){
-        int x = random.nextInt(0, worldSize);
-        int y = random.nextInt(0, worldSize);
-//        System.out.println("Trying to add food");
-        if (terrain[x][y].getMaterialType() == Material.GROUND){
-            foodMap[x][y] = true;
-//            System.out.println("Adding food");
-        }
-
-    }
-
-    public static boolean checkForFood(int x, int y){
-        return foodMap[x][y];
-    }
-
-    public static void eatFood(int x, int y){
-        foodMap[x][y] = false;
     }
 }
