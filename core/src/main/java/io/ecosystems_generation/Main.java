@@ -27,7 +27,7 @@ public class Main extends ApplicationAdapter{
     private static final int foodGenPerSecond = 125;
 
     private static final int worldSize = 250;
-    private static final int WORLD_SEED = 7777; // leave 0 for random seed
+    private static final int WORLD_SEED = 0; // leave 0 for random seed
 
     // camera panning speed
     float speed = 400f;

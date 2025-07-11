@@ -1,7 +1,9 @@
 package io.ecosystems_generation;
 
 import io.ecosystems_generation.EntityHandling.Entity;
+import io.ecosystems_generation.EntityHandling.EntityHandler;
 import io.ecosystems_generation.EntityHandling.Predator;
+import io.ecosystems_generation.EntityHandling.Prey;
 import io.ecosystems_generation.TerrainHandling.Material;
 import io.ecosystems_generation.TerrainHandling.NoiseGenerator;
 import io.ecosystems_generation.TerrainHandling.Terrain;
@@ -33,8 +35,10 @@ public class World {
         noise = noiseGenerator.generateSmoothNoise(worldSize);
         setTerrain();
         setEntities();
-        EntityHandler handler = new EntityHandler(entities, 0, 59, 0, 36);
-        handler.printZone();
+
+        // TODO FIX
+//        EntityHandler handler = new EntityHandler(entities, 0, 59, 0, 36);
+//        handler.printZone();
     }
 
 
@@ -58,15 +62,17 @@ public class World {
         return entities;
     }
 
+    public static void setTerrainTile(int x, int y, Material materialType){
+        terrain[x][y].setMaterialType(materialType);
+    }
+
     private void setTerrain() {
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 float f = noise[x][y];
                 Material material = Material.GROUND; // default value ground
-                if (f < 0.40f) {
-                    // Water (darker blue for deeper)
-                    terrain[x][y] = new Terrain(Material.WATER);
-                    continue;
+                if (f < 0.35f) {
+                    material = Material.WATER;
                 }
                 else if (f >= 0.45f && f < 0.65f) {
                     // Decoration generation, 5% generation chance
@@ -75,47 +81,96 @@ public class World {
                     }
                 }
 
-                if (f >= 0.45f && f < 0.65f) {
-                    // Stone generation, 1.5% generation chance
-                    if (TerrainUtils.getRandomBoolean(1.5f)) {
-                        terrain[x][y] = new Terrain(Material.STONE);
-                        continue;
-                    }
-                }
                 // Grass (darker green for higher terrain)
                 terrain[x][y] = new Terrain(material, x, y);
             }
         }
+
+        // Clean up small chunks of material (< 20 tiles)
         terrainCleanup();
-    }
-
-    private void terrainCleanup(){
 
     }
 
-    private int getChunkArea(Terrain terrain){
-        terrain.markAsChecked();
-        return 0;
-    }
+    private void terrainCleanup() {
 
-    private void setEntities() {
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
+                Material currentType = terrain[x][y].getMaterialType();
+                if (currentType == Material.GROUND || currentType == Material.WATER) {
+                    if (!terrain[x][y].checked()) {
+                        // Get all tiles in connected area
+                        LinkedList<Terrain> chunk = new LinkedList<>();
+                        int areaSize = getChunkArea(x, y, currentType, chunk);
 
-
-
-        this.entities[59 / 2][36 / 2] = new Prey(0);
-        int min_x = 59 / 2 - 9;
-        int max_x = 59 / 2 + 9 + 1;
-        int min_y = 36 / 2 - 9;
-        int max_y = 36 / 2 + 9 + 1;
-        for (int x = min_x; x < max_x; x++) {
-            for (int y = min_y; y < max_y; y++) {
-                if (terrain[x][y].getMaterialType() == Material.GROUND) {
-                boolean chance = TerrainUtils.getRandomBoolean(1);
-                    if (chance) {
-                        this.entities[x][y] = new Prey(0);
+                        // If small area, flip material type
+                        if (areaSize < 20) {
+                            Material newType = (currentType == Material.WATER) ? Material.GROUND : Material.WATER;
+                            for (Terrain t : chunk) {
+                                t.setMaterialType(newType);
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    private int getChunkArea (int startX, int startY, Material type, LinkedList < Terrain > chunk){
+        int count = 0;
+        Queue<Terrain> queue = new LinkedList<>();
+        queue.add(terrain[startX][startY]);
+
+        while (!queue.isEmpty()) {
+            Terrain current = queue.poll();
+            int x = current.getX();
+            int y = current.getY();
+
+            if (x < 0 || x >= worldSize || y < 0 || y >= worldSize) continue;
+            Terrain t = terrain[x][y];
+
+            if (t.checked() || t.getMaterialType() != type) continue;
+
+            t.markAsChecked();
+            chunk.add(t);
+            count++;
+
+            // Add 4 neighbors (up, down, left, right)
+            if (x > 0) queue.add(terrain[x - 1][y]);
+            if (x < worldSize - 1) queue.add(terrain[x + 1][y]);
+            if (y > 0) queue.add(terrain[x][y - 1]);
+            if (y < worldSize - 1) queue.add(terrain[x][y + 1]);
+        }
+        return count;
+    }
+
+    private void setEntities() {
+        // TODO I REMOVED YOUR MAGIC NUMBERS
+        for (int x = 0; x < worldSize; x++) {
+            for (int y = 0; y < worldSize; y++) {
+                if (terrain[x][y].getMaterialType() == Material.GROUND) {
+                    boolean chance = TerrainUtils.getRandomBoolean(0.5f);
+                    if (chance) {
+                        entities[x][y] = new Predator(0);
+                    }
+                }
+            }
+        }
+    }
+
+    public static void addFood(){
+        int x = random.nextInt(0, worldSize);
+        int y = random.nextInt(0, worldSize);
+        if (terrain[x][y].getMaterialType() == Material.GROUND){
+            foodMap[x][y] = true;
+        }
+
+    }
+
+    public static boolean checkForFood(int x, int y){
+        return foodMap[x][y];
+    }
+
+    public static void eatFood(int x, int y){
+        foodMap[x][y] = false;
     }
 }

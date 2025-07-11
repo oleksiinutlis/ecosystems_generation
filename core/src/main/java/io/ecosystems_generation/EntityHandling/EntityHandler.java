@@ -1,4 +1,5 @@
-package io.ecosystems_generation;
+package io.ecosystems_generation.EntityHandling;
+
 import java.util.ArrayList; // Import the ArrayList class
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class EntityHandler {
 
     public void sendRequest(RequestType type, Entity entity, int... args) {
         if (type == RequestType.MOVE) {
-            
+
                 int fromX = args[0];
                 int fromY = args[1];
                 int toX = args[2];
@@ -24,7 +25,7 @@ public class EntityHandler {
 
                 // Store move requests for later resolution
                 movementQueue.add(new int[]{fromX, fromY, toX, toY});
-            
+
             // Add more case types like SENSE, EAT, etc.
         }
     }
