@@ -34,6 +34,7 @@ public class DrawTools {
 
     // FIRST FOUR FACE RIGHT, LAST 4 FACE LEFT
     TextureRegion[] chickenAnimations;
+    TextureRegion[] boarAnimations;
 
     private static final int TOP         = 1 << 0; // 0000 0001
     private static final int BOTTOM      = 1 << 1; // 0000 0010
@@ -57,6 +58,7 @@ public class DrawTools {
         this.TILE_SIZE = TILE_SIZE;
 
         this.chickenAnimations = new TextureRegion[8];
+        this.boarAnimations = new TextureRegion[12];
 
         loadTerrainTextures();
         loadEntityTextures();
@@ -123,22 +125,27 @@ public class DrawTools {
     }
 
     private void loadEntityTextures(){
-        // boar
         Texture tileset = new Texture(Gdx.files.internal("boar_animations.png"));
         tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        TextureRegion boarRegion = new TextureRegion(tileset, 0, 0, 48, 32);
-        tileLookup.put(TextureName.BOAR, boarRegion);
 
-        // chicken
+        // boar facing right
+        for (int i = 0; i < 6; i++) {
+            boarAnimations[i] = new TextureRegion(tileset, i * 48, 0, 48, 32);
+            boarAnimations[i+6] = new TextureRegion(tileset, i * 48, 0, 48, 32);
+        }
+        // boar facing left
+        for (int i = 0; i < 6; i++) {
+            boarAnimations[i].flip( true, false);
+        }
+
         tileset = new Texture(Gdx.files.internal("food.png"));
         tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
         TextureRegion carrotRegion = new TextureRegion(tileset, 112, 128, 16, 16);
         tileLookup.put(TextureName.CARROT, carrotRegion);
 
-        // chicken
+
         tileset = new Texture(Gdx.files.internal("chicken.png"));
         tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-
         // chicken facing right
         for (int i = 0; i < 4; i++) {
             TextureRegion chickenAnimationFrame = new TextureRegion(tileset, i * 16, 128, 16, 16);
@@ -200,103 +207,95 @@ public class DrawTools {
         batch.end();
     }
 
-    public void drawEntities(Entity[][] entities){
+    public void drawEntities(Entity[][] entities) {
         batch.begin();
         for (int x = 0; x < entities.length; x++) {
-            if (entities[x] != null) {
-                for (int y = 0; y < entities[x].length; y++) {
-                    if (entities[x][y] != null) {
-                        EntityType entityType = entities[x][y].getType();
-                        switch (entityType) {
-                            case PREY:
-                                    Prey prey = (Prey) entities[x][y];
-                                    if (prey.isMoving()) {
-                                        int frame = prey.getAnimationFrame();
-                                        int drawnX = prey.getDrawnX();
-                                        int drawnY = prey.getDrawnY();
+            for (int y = 0; y < entities[x].length; y++) {
+                if (entities[x][y] != null) {
+                    EntityType entityType = entities[x][y].getType();
+                    switch (entityType) {
+                        case PREY:
+                            Prey prey = (Prey) entities[x][y];
+                            if (prey.isMoving()) {
+                                int frame = prey.getAnimationFrame();
+                                int drawnX = prey.getDrawnX();
+                                int drawnY = prey.getDrawnY();
 
-                                        int desiredX = prey.getDesiredX();
-                                        int desiredY = prey.getDesiredY();
+                                int desiredX = prey.getDesiredX();
+                                int desiredY = prey.getDesiredY();
 
-                                        if (drawnX >= desiredX){
-                                            // We want to move left so we
-                                            frame += 4;
-                                        }
-
-                                        // TODO REPLACE THE -1 / 1 with -speed / speed
-                                        // speed has to be reasonable, make it 1 to 5
-                                        if (drawnX > desiredX){
-                                            drawnX += -1;
-                                        }
-                                        else if (drawnX < desiredX){
-                                            drawnX += 1;
-                                        }
-
-                                        if (drawnY > desiredY){
-                                            drawnY += -1;
-                                        }
-                                        else if (drawnY < desiredY) {
-                                            drawnY += 1;
-                                        }
-
-
-                                        prey.setDrawnCoordinates(drawnX, drawnY);
-                                        batch.draw(chickenAnimations[frame], drawnX, drawnY, 24, 24);
-                                        int rendersSinceTextureChange = prey.getRendersSinceTextureChange();
-                                        if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0){
-                                            prey.setNextFrame();
-                                        }
-                                        prey.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
-                                    }
-                                    else {
-                                        batch.draw(chickenAnimations[prey.getAnimationFrame()], prey.getDrawnX(), prey.getDrawnY(), 24, 24);
-                                    }
-                                break;
-                            case PREDATOR:
-                                Predator predator = (Predator) entities[x][y];
-                                if (predator.isMoving()) {
-                                    int frame = predator.getAnimationFrame();
-                                    int drawnX = predator.getDrawnX();
-                                    int drawnY = predator.getDrawnY();
-
-                                    int desiredX = predator.getDesiredX();
-                                    int desiredY = predator.getDesiredY();
-
-                                    if (drawnX >= desiredX){
-                                        // We want to move left so we
-                                        frame += 6;
-                                    }
-
-                                    // TODO REPLACE THE -1 / 1 with -speed / speed
-                                    // speed has to be reasonable, make it 1 to 5
-                                    if (drawnX > desiredX){
-                                        drawnX += -1;
-                                    }
-                                    else if (drawnX < desiredX){
-                                        drawnX += 1;
-                                    }
-
-                                    if (drawnY > desiredY){
-                                        drawnY += -1;
-                                    }
-                                    else if (drawnY < desiredY) {
-                                        drawnY += 1;
-                                    }
-
-
-                                    predator.setDrawnCoordinates(drawnX, drawnY);
-                                    batch.draw(tileLookup.get(TextureName.BOAR), drawnX, drawnY, 48, 36);
-                                    int rendersSinceTextureChange = predator.getRendersSinceTextureChange();
-                                    if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0){
-                                        predator.setNextFrame();
-                                    }
-                                    predator.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
+                                if (drawnX >= desiredX) {
+                                    // We want to move left so we
+                                    frame += 4;
                                 }
-                                else {
-                                    batch.draw(tileLookup.get(TextureName.BOAR), predator.getDrawnX(), predator.getDrawnY(), 48, 36);
+
+                                // TODO REPLACE THE -1 / 1 with -speed / speed
+                                // speed has to be reasonable, make it 1 to 5
+                                if (drawnX > desiredX) {
+                                    drawnX += -1;
+                                } else if (drawnX < desiredX) {
+                                    drawnX += 1;
                                 }
-                                break;
-                        }
+
+                                if (drawnY > desiredY) {
+                                    drawnY += -1;
+                                } else if (drawnY < desiredY) {
+                                    drawnY += 1;
+                                }
+
+
+                                prey.setDrawnCoordinates(drawnX, drawnY);
+                                batch.draw(chickenAnimations[frame], drawnX, drawnY, 24, 24);
+                                int rendersSinceTextureChange = prey.getRendersSinceTextureChange();
+                                if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0) {
+                                    prey.setNextFrame();
+                                }
+                                prey.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
+                            } else {
+                                batch.draw(chickenAnimations[prey.getAnimationFrame()], prey.getDrawnX(), prey.getDrawnY(), 24, 24);
+                            }
+                            break;
+                        case PREDATOR:
+                            Predator predator = (Predator) entities[x][y];
+                            if (predator.isMoving()) {
+                                int frame = predator.getAnimationFrame();
+                                int drawnX = predator.getDrawnX();
+                                int drawnY = predator.getDrawnY();
+
+                                int desiredX = predator.getDesiredX();
+                                int desiredY = predator.getDesiredY();
+
+                                if (drawnX >= desiredX) {
+                                    // We want to move left so we
+                                    frame += 6;
+                                }
+
+                                // TODO REPLACE THE -1 / 1 with -speed / speed
+                                // speed has to be reasonable, make it 1 to 5
+                                if (drawnX > desiredX) {
+                                    drawnX += -1;
+                                } else if (drawnX < desiredX) {
+                                    drawnX += 1;
+                                }
+
+                                if (drawnY > desiredY) {
+                                    drawnY += -1;
+                                } else if (drawnY < desiredY) {
+                                    drawnY += 1;
+                                }
+
+
+                                predator.setDrawnCoordinates(drawnX, drawnY);
+                                batch.draw(boarAnimations[frame], drawnX, drawnY, 48, 36);
+                                int rendersSinceTextureChange = predator.getRendersSinceTextureChange();
+                                if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0) {
+                                    predator.setNextFrame();
+                                }
+                                predator.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
+                            } else {
+                                batch.draw(boarAnimations[predator.getAnimationFrame()], predator.getDrawnX(), predator.getDrawnY(), 48, 36);
+                            }
+                            break;
                     }
                 }
             }
@@ -321,11 +320,8 @@ public class DrawTools {
                 TextureRegion textureRegion;
                 switch (terrain[x][y].getMaterialType()){
                     case DECORATION:
-                        if (!isNearWater(x,y)){
-                            textureRegion = extraTiles[x][y];
-                            batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
-                        }
-                        else replaceTile(x, y, Material.GROUND);
+                        textureRegion = extraTiles[x][y];
+                        batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
                         break;
                     case TREE:
                         break;
@@ -499,7 +495,4 @@ public class DrawTools {
     private boolean isInBounds(int x, int y) {
         return x >= 0 && x < worldSize && y >= 0 && y < worldSize;
     }
-
-
-
 }

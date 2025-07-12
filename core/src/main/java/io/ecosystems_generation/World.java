@@ -160,10 +160,9 @@ public class World {
                         entities[x][y] = predator;
                     }
 
-                    //TODO entity setting
+                    // TODO entity setting
                     chance = TerrainUtils.getRandomBoolean(2f);
                     if (chance) {
-
                         Prey prey = new Prey(0);
                         prey.setDrawnCoordinates(x * 16, y * 16);
                         prey.setDesiredCoordinates(100, 100);

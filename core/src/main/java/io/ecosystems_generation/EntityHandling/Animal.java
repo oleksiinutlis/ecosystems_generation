@@ -36,14 +36,6 @@ public class Animal {
     int textureAnimationsCount;
     int rendersSinceTextureChange;
 
-    // TODO LOOK AT THIS
-    public enum DIRECTION {
-        LEFT,
-        RIGHT
-    }
-
-    DIRECTION direction;
-
     //
     // animal constructor with randomised genetic information, animal id derived through input
     //
@@ -100,7 +92,6 @@ public class Animal {
     }
 
     public RequestType giveCurrentRequest() {
-
         // TODO I INVENTED THIS
         return RequestType.MOVE;
     }
@@ -118,10 +109,6 @@ public class Animal {
     public int cantor(int x, int y){
         int res = x * x + x + 2 * x * y + 3 * y + y * y;
         return res / 2;
-    }
-
-    public DIRECTION getDirection(){
-        return direction;
     }
 
     public void setTextureAnimationsCount(int count) {
