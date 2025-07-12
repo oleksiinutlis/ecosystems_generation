@@ -1,5 +1,7 @@
 package io.ecosystems_generation.EntityHandling;
 
+import io.ecosystems_generation.Main;
+
 public class Animal {
     public int animalId;
     public byte animalAge;
@@ -21,6 +23,26 @@ public class Animal {
     // likability has gene id 0b0111
     public Gene aggresivenessGene;
     // aggressiveness has gene id 0b1000
+
+    int x;
+    int y;
+
+    int desiredX;
+    int desiredY;
+
+    int drawnX;
+    int drawnY;
+    int animationFrame;
+    int textureAnimationsCount;
+    int rendersSinceTextureChange;
+
+    // TODO LOOK AT THIS
+    public enum DIRECTION {
+        LEFT,
+        RIGHT
+    }
+
+    DIRECTION direction;
 
     //
     // animal constructor with randomised genetic information, animal id derived through input
@@ -96,5 +118,72 @@ public class Animal {
     public int cantor(int x, int y){
         int res = x * x + x + 2 * x * y + 3 * y + y * y;
         return res / 2;
+    }
+
+    public DIRECTION getDirection(){
+        return direction;
+    }
+
+    public void setTextureAnimationsCount(int count) {
+        this.textureAnimationsCount = count;
+    }
+
+    public int getAnimationFrame() {
+        return animationFrame;
+    }
+
+    public void setAnimationFrame(int animationFrame) {
+        this.animationFrame = animationFrame;
+    }
+
+    public void setNextFrame(){
+        this.animationFrame++;
+        this.animationFrame %= (textureAnimationsCount);
+    }
+
+    public void setDrawnCoordinates(int x, int y){
+        this.drawnX = x;
+        this.drawnY = y;
+    }
+
+    public int getDrawnX() {
+        return drawnX;
+    }
+
+    public int getDrawnY() {
+        return drawnY;
+    }
+
+    public boolean isMoving() {
+        return desiredX != drawnX || desiredY != drawnY;
+    }
+
+    public int getDesiredX() {
+        return desiredX;
+    }
+
+    public void setDesiredX(int desiredX) {
+        this.desiredX = desiredX;
+    }
+
+    public int getDesiredY() {
+        return desiredY;
+    }
+
+    public void setDesiredY(int desiredY) {
+        this.desiredY = desiredY;
+    }
+
+    public void setDesiredCoordinates(int x, int y){
+        setDesiredX(Main.getTileSize() * x);
+        setDesiredY(Main.getTileSize() * y);
+    }
+
+    public int getRendersSinceTextureChange() {
+        return rendersSinceTextureChange;
+    }
+
+    public void setRendersSinceTextureChange(int rendersSinceTextureChange) {
+        this.rendersSinceTextureChange = rendersSinceTextureChange;
     }
 }

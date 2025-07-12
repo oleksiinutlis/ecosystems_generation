@@ -42,11 +42,7 @@ public enum TextureName {
 
     CARROT,
 
-    BOAR,
-    CHICKEN_0,
-    CHICKEN_1,
-    CHICKEN_2,
-    CHICKEN_3;
+    BOAR;
 
     private static final TextureName[] DECORATION_DEFAULTS = {
         DECORATION_DEFAULT_0,
@@ -75,23 +71,12 @@ public enum TextureName {
         GRASS_DEFAULT_5,
     };
 
-    private static final TextureName[] CHICKEN_TEXTURES = {
-            CHICKEN_0,
-            CHICKEN_1,
-            CHICKEN_2,
-            CHICKEN_3,
-    };
-
     public static TextureName[] getDecorations(){
         return DECORATION_DEFAULTS;
     }
 
     public static TextureName[] getWaterDecoration(){
         return DECORATION_LILY_PADS;
-    }
-
-    public static TextureName[] getChickenTextures(){
-        return CHICKEN_TEXTURES;
     }
 
     public static int getWaterDecorationSize(){

@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import io.ecosystems_generation.EntityHandling.Entity;
+import io.ecosystems_generation.EntityHandling.Predator;
+import io.ecosystems_generation.EntityHandling.Prey;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter{
@@ -17,7 +20,7 @@ public class Main extends ApplicationAdapter{
 
     // tick logic variables
     private float tickTimer = 0f;
-    private int tickCount = 0;
+    private static int tickCount = 0;
 
     // constants
     private static final float ticksPerSecond = 600f;
@@ -80,11 +83,10 @@ public class Main extends ApplicationAdapter{
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-
+        Entity[][] entities = World.getEntities();
         drawTool.drawTerrain();
         drawTool.drawExtras();
-        drawTool.drawEntities(World.getEntities());
-
+        drawTool.drawEntities(entities);
         // world tick, everything synced to this
         tick();
     }
@@ -139,6 +141,14 @@ public class Main extends ApplicationAdapter{
         if ((tickCount % (int) (ticksPerSecond / foodGenPerSecond)) == 0){
             World.addFood();
         }
+    }
+
+    public static int getTickCount() {
+        return tickCount;
+    }
+
+    public static int getTileSize(){
+        return TILE_SIZE;
     }
 
 }

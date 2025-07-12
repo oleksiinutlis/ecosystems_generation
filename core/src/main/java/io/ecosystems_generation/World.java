@@ -1,7 +1,6 @@
 package io.ecosystems_generation;
 
 import io.ecosystems_generation.EntityHandling.Entity;
-import io.ecosystems_generation.EntityHandling.EntityHandler;
 import io.ecosystems_generation.EntityHandling.Predator;
 import io.ecosystems_generation.EntityHandling.Prey;
 import io.ecosystems_generation.TerrainHandling.Material;
@@ -150,13 +149,29 @@ public class World {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
                     boolean chance = TerrainUtils.getRandomBoolean(0.5f);
                     if (chance) {
-                        entities[x][y] = new Predator(0);
+
+                        Predator predator = new Predator(0);
+                        predator.setDrawnCoordinates(x * 16, y * 16);
+                        predator.setDesiredCoordinates(50, 50);
+                        predator.setAnimationFrame(0);
+
+                        predator.setTextureAnimationsCount(6);
+                        // 4 textures for chicken, 6 for boar
+                        entities[x][y] = predator;
                     }
 
                     //TODO entity setting
-                    chance = TerrainUtils.getRandomBoolean(0.5f);
+                    chance = TerrainUtils.getRandomBoolean(2f);
                     if (chance) {
-                        entities[x][y] = new Prey(0);
+
+                        Prey prey = new Prey(0);
+                        prey.setDrawnCoordinates(x * 16, y * 16);
+                        prey.setDesiredCoordinates(100, 100);
+                        prey.setAnimationFrame(0);
+
+                        prey.setTextureAnimationsCount(4);
+                        // 4 textures for chicken, 6 for boar
+                        entities[x][y] = prey;
                     }
                 }
             }

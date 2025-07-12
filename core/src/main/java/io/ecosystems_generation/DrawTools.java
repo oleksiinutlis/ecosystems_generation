@@ -7,8 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import io.ecosystems_generation.EntityHandling.Entity;
-import io.ecosystems_generation.EntityHandling.EntityType;
+import io.ecosystems_generation.EntityHandling.*;
 import io.ecosystems_generation.TerrainHandling.Material;
 import io.ecosystems_generation.TerrainHandling.Terrain;
 import io.ecosystems_generation.TerrainHandling.TerrainUtils;
@@ -33,6 +32,9 @@ public class DrawTools {
     private TextureRegion[][] terrainTiles;
     Map<TextureName, TextureRegion> tileLookup = new HashMap<>();
 
+    // FIRST FOUR FACE RIGHT, LAST 4 FACE LEFT
+    TextureRegion[] chickenAnimations;
+
     private static final int TOP         = 1 << 0; // 0000 0001
     private static final int BOTTOM      = 1 << 1; // 0000 0010
     private static final int LEFT        = 1 << 2; // 0000 0100
@@ -53,6 +55,8 @@ public class DrawTools {
         this.GRID_WIDTH = GRID_WIDTH;
         this.GRID_HEIGHT = GRID_HEIGHT;
         this.TILE_SIZE = TILE_SIZE;
+
+        this.chickenAnimations = new TextureRegion[8];
 
         loadTerrainTextures();
         loadEntityTextures();
@@ -134,10 +138,16 @@ public class DrawTools {
         // chicken
         tileset = new Texture(Gdx.files.internal("chicken.png"));
         tileset.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        TextureName[] chickenTextures = TextureName.getChickenTextures();
+
+        // chicken facing right
         for (int i = 0; i < 4; i++) {
-            TextureRegion chickenTexture = new TextureRegion(tileset, i * 16, 128, 16, 16);
-            tileLookup.put(chickenTextures[i], chickenTexture);
+            TextureRegion chickenAnimationFrame = new TextureRegion(tileset, i * 16, 128, 16, 16);
+            chickenAnimations[i] = chickenAnimationFrame;
+        }
+        // chicken facing left
+        for (int i = 0; i < 4; i++) {
+            TextureRegion chickenAnimationFrame = new TextureRegion(tileset, i * 16, 144, 16, 16);
+            chickenAnimations[i+4] = chickenAnimationFrame;
         }
     }
 
@@ -198,11 +208,93 @@ public class DrawTools {
                     if (entities[x][y] != null) {
                         EntityType entityType = entities[x][y].getType();
                         switch (entityType) {
-                            case PREDATOR:
-                                batch.draw(tileLookup.get(TextureName.CHICKEN_0), x * TILE_SIZE, y * TILE_SIZE, 24, 24);
-                                break;
                             case PREY:
-                                batch.draw(tileLookup.get(TextureName.BOAR), x * TILE_SIZE - 10, y * TILE_SIZE - 10, 48, 32);
+                                    Prey prey = (Prey) entities[x][y];
+                                    if (prey.isMoving()) {
+                                        int frame = prey.getAnimationFrame();
+                                        int drawnX = prey.getDrawnX();
+                                        int drawnY = prey.getDrawnY();
+
+                                        int desiredX = prey.getDesiredX();
+                                        int desiredY = prey.getDesiredY();
+
+                                        if (drawnX >= desiredX){
+                                            // We want to move left so we
+                                            frame += 4;
+                                        }
+
+                                        // TODO REPLACE THE -1 / 1 with -speed / speed
+                                        // speed has to be reasonable, make it 1 to 5
+                                        if (drawnX > desiredX){
+                                            drawnX += -1;
+                                        }
+                                        else if (drawnX < desiredX){
+                                            drawnX += 1;
+                                        }
+
+                                        if (drawnY > desiredY){
+                                            drawnY += -1;
+                                        }
+                                        else if (drawnY < desiredY) {
+                                            drawnY += 1;
+                                        }
+
+
+                                        prey.setDrawnCoordinates(drawnX, drawnY);
+                                        batch.draw(chickenAnimations[frame], drawnX, drawnY, 24, 24);
+                                        int rendersSinceTextureChange = prey.getRendersSinceTextureChange();
+                                        if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0){
+                                            prey.setNextFrame();
+                                        }
+                                        prey.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
+                                    }
+                                    else {
+                                        batch.draw(chickenAnimations[prey.getAnimationFrame()], prey.getDrawnX(), prey.getDrawnY(), 24, 24);
+                                    }
+                                break;
+                            case PREDATOR:
+                                Predator predator = (Predator) entities[x][y];
+                                if (predator.isMoving()) {
+                                    int frame = predator.getAnimationFrame();
+                                    int drawnX = predator.getDrawnX();
+                                    int drawnY = predator.getDrawnY();
+
+                                    int desiredX = predator.getDesiredX();
+                                    int desiredY = predator.getDesiredY();
+
+                                    if (drawnX >= desiredX){
+                                        // We want to move left so we
+                                        frame += 6;
+                                    }
+
+                                    // TODO REPLACE THE -1 / 1 with -speed / speed
+                                    // speed has to be reasonable, make it 1 to 5
+                                    if (drawnX > desiredX){
+                                        drawnX += -1;
+                                    }
+                                    else if (drawnX < desiredX){
+                                        drawnX += 1;
+                                    }
+
+                                    if (drawnY > desiredY){
+                                        drawnY += -1;
+                                    }
+                                    else if (drawnY < desiredY) {
+                                        drawnY += 1;
+                                    }
+
+
+                                    predator.setDrawnCoordinates(drawnX, drawnY);
+                                    batch.draw(tileLookup.get(TextureName.BOAR), drawnX, drawnY, 48, 36);
+                                    int rendersSinceTextureChange = predator.getRendersSinceTextureChange();
+                                    if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0){
+                                        predator.setNextFrame();
+                                    }
+                                    predator.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
+                                }
+                                else {
+                                    batch.draw(tileLookup.get(TextureName.BOAR), predator.getDrawnX(), predator.getDrawnY(), 48, 36);
+                                }
                                 break;
                         }
                     }

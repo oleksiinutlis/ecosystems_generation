@@ -23,6 +23,17 @@ public class EntityHandler {
                 int toX = args[2];
                 int toY = args[3];
 
+                // TODO
+                // THATS MY DRAWING MOVEMENT DONT TOUCH THAT
+                if (entity instanceof Predator){
+                    Predator predator = (Predator) entity;
+                    predator.setDesiredCoordinates(toX, toY);
+                }
+                else if (entity instanceof Prey){
+                    Prey prey = (Prey) entity;
+                    prey.setDesiredCoordinates(toX, toY);
+                }
+
                 // Store move requests for later resolution
                 movementQueue.add(new int[]{fromX, fromY, toX, toY});
 
