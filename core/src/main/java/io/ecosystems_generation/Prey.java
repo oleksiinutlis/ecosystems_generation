@@ -17,21 +17,23 @@ public class Prey extends Animal implements Entity{
             handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 6));
         }
         else {
-            for (int i = 0; i < lastVision.length; i++) {
-                for (int j = 0; j < lastVision[0].length; j++) {
-                    if (lastVision[i][j] == null){
-                        System.out.print("0 ");
-                    } else {
-                        System.out.print("1 ");
-                    }
+            // for (int i = 0; i < lastVision.length; i++) {
+            //     for (int j = 0; j < lastVision[0].length; j++) {
+            //         if (lastVision[i][j] == null){
+            //             System.out.print("0 ");
+            //         } else {
+            //             System.out.print("1 ");
+            //         }
                     
-                }
-                System.out.println();
-            }
+            //     }
+            //     System.out.println();
+            // }
+            int[] target = {0,0};
+            int[] next = getRandomStepTowards(x, y, target[0], target[0], 1);
+            System.out.println("tryingggg");
+            handler.submitRequest(new Request(RequestType.MOVE, this, x, y, next[0], next[1]));
         }
         // Attempt to move right by 1 tile
-        System.out.println("tryingggg");
-        // handler.submitRequest(new Request(RequestType.MOVE, this, x, y, x + 1, y - 1));
     }
 
     @Override

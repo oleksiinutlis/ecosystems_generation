@@ -87,7 +87,7 @@ public class World {
         
 
         
-        this.entities[59 / 2][36 / 2] = new Prey(0);
+        // this.entities[59 / 2][36 / 2] = new Prey(0);
         int min_x = 59 / 2 - 9;
         // min_x = 0;
         int max_x = 59 / 2 + 9 + 1;

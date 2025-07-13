@@ -80,7 +80,25 @@ public class Animal {
 
 
 
-    
+    public static int[] getRandomStepTowards(int current_x, int current_y, int target_x, int target_y, double randomness) {
+    int dx = target_x - current_x;
+    int dy = target_y - current_y;
+
+    int stepX = Integer.compare(dx, 0); // -1, 0, or 1
+    int stepY = Integer.compare(dy, 0);
+
+    // Add jitter with probability
+    if (Math.random() < randomness) {
+        stepX += (int)(Math.round((Math.random() - 0.5) * 2)); // -1, 0, or 1
+        stepY += (int)(Math.round((Math.random() - 0.5) * 2));
+    }
+
+    // Clamp to valid step range
+    stepX = Math.max(-1, Math.min(1, stepX));
+    stepY = Math.max(-1, Math.min(1, stepY));
+
+    return new int[] { target_x + stepX, target_y + stepY };
+    }
     // A(x,y) = (x^2 + x + 2xy + 3y + y^2) / 2
     // Cantor pairing function
     public int cantor(int x, int y){

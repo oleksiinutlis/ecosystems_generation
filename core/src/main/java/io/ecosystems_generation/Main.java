@@ -17,7 +17,7 @@ public class Main extends ApplicationAdapter{
     private int tickCount = 0;
 
     // constants
-    private static final float ticksPerSecond = 1f;
+    private static final float ticksPerSecond = 100f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
     private static final int worldSize = 128; // has to be a power of 2
