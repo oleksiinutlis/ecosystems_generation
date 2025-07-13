@@ -17,6 +17,7 @@ public class World {
     private static float[][] noise;
     private static Random random;
     private static int worldSize;
+    private static DrawTools drawTool;
 
     public EntityHandler handler;
     public World(int size, int seed){
@@ -167,11 +168,12 @@ public class World {
     public static void addFood(){
         int x = random.nextInt(0, worldSize);
         int y = random.nextInt(0, worldSize);
-        if (terrain[x][y].getMaterialType() == Material.GROUND && entities[x][y] == null){
+        if (terrain[x][y].getMaterialType() == Material.GROUND && entities[x][y] == null
+            && !drawTool.isNearWater(x, y))
+        {
             foodMap[x][y] = true;
             entities[x][y] = new Food();
         }
-
     }
 
     public static boolean checkForFood(int x, int y){
@@ -206,5 +208,9 @@ public class World {
         prey.setTextureAnimationsCount(4);
 
         return prey;
+    }
+
+    public void setDrawTool(DrawTools drawTool) {
+        this.drawTool = drawTool;
     }
 }

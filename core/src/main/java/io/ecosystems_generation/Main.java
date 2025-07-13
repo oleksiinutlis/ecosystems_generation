@@ -67,6 +67,8 @@ public class Main extends ApplicationAdapter{
         this.world = new World(worldSize, WORLD_SEED);
         this.drawTool = new DrawTools(batch, shapeRenderer, WORLD_WIDTH, WORLD_HEIGHT, TILE_SIZE);
         // generates a world and terrain
+
+        world.setDrawTool(drawTool);
     }
 
     @Override

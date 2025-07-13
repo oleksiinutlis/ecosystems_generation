@@ -241,8 +241,6 @@ public class DrawTools {
                         textureRegion = extraTiles[x][y];
                         batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
                         break;
-                    case TREE:
-                        break;
                 }
 
                 if (World.checkForFood(x,y)){
