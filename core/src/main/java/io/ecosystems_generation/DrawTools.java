@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import io.ecosystems_generation.TerrainHandling.Material;
+import io.ecosystems_generation.TerrainHandling.Terrain;
+
 import java.util.Random;
 
 public class DrawTools {

@@ -1,4 +1,4 @@
-package io.ecosystems_generation;
+package io.ecosystems_generation.EntityHandling;
 import java.util.ArrayList; // Import the ArrayList class
 import java.util.List;
 

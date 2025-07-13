@@ -1,4 +1,4 @@
-package io.ecosystems_generation;
+package io.ecosystems_generation.EntityHandling;
 
 
 public class Predator extends Animal  implements Entity{
