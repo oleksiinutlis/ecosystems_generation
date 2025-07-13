@@ -2,6 +2,7 @@ package io.ecosystems_generation;
 
 public class Animal {
     public int animalId;
+    public int getID() { return animalId; }
     public byte animalAge;
     public Gene genderGene;
     // gender has gene id 0b0000
@@ -77,19 +78,7 @@ public class Animal {
         return cantor(parentId, other_parentId);
     }
 
-    public request give_current_request() {
 
-        return request.MOVE;   
-    }
-
-
-
-    public enum RequestType {
-        MOVE,
-        SENSE,
-        BREED,
-        EAT
-    }
 
     
     // A(x,y) = (x^2 + x + 2xy + 3y + y^2) / 2

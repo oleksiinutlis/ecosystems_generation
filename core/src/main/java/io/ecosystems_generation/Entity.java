@@ -2,5 +2,10 @@ package io.ecosystems_generation;
 
 public interface Entity {
     EntityType getType();
-    void act(EntityHandler handler, int x, int y);
+
+    // Phase 1: Entity sends intent for current tick
+    void sendRequests(EntityHandler handler, int x, int y);
+
+    // Phase 2: Entity receives response(s) from the handler
+    void receiveResponse(Response r);
 }

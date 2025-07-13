@@ -21,7 +21,7 @@ public class World {
         setTerrain();
         setEntities();
         EntityHandler handler = new EntityHandler(entities, 0, 59, 0, 36);
-        handler.printZone();
+
     }
 
 
