@@ -13,7 +13,7 @@ public class Predator extends Animal  implements Entity{
     @Override
     public void sendRequests(EntityHandler handler, int x, int y) {
         // Request to sense surroundings with radius 2
-        handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 2));
+        // handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 2));
 
         // Attempt to move right by 1 tile
         handler.submitRequest(new Request(RequestType.MOVE, this, x, y, x + 1, y));
@@ -26,7 +26,8 @@ public class Predator extends Animal  implements Entity{
                 moveSuccess = (response.getStatus() == ResponseStatus.SUCCESS);
                 if (!moveSuccess) {
                 System.out.println("Prey " + getID() + " failed to move.");
-            }
+                }
+                
             break;
 
             case SENSE:

@@ -17,7 +17,7 @@ public class Main extends ApplicationAdapter{
     private int tickCount = 0;
 
     // constants
-    private static final float ticksPerSecond = 5f;
+    private static final float ticksPerSecond = 1f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
     private static final int worldSize = 128; // has to be a power of 2
@@ -52,6 +52,9 @@ public class Main extends ApplicationAdapter{
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
 
         tick();
+        // System.out.println("tick happened");
+        this.world.handler.stepZone();
+        // this.world.handler.printZone();
         drawTool.drawTiles();
         drawTool.drawEntities(world.getEntities());
     }

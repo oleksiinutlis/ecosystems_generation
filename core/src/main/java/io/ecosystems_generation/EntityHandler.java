@@ -11,12 +11,32 @@ public class EntityHandler {
     private final List<Request> requestQueue = new ArrayList<>();
     private final List<Response> responseQueue = new ArrayList<>();
 
-    public EntityHandler(Entity[][] entities, int zoneStartX, int zoneStartY, int zoneEndX, int zoneEndY) {
+    public EntityHandler(Entity[][] entities, int zoneStartX, int zoneEndX, int zoneStartY, int zoneEndY) {
         this.entities = entities;
-        this.zoneStartY = zoneStartY;
         this.zoneStartX = zoneStartX;
         this.zoneEndX = zoneEndX;
+        this.zoneStartY = zoneStartY;
         this.zoneEndY = zoneEndY;
+    }
+        public void printZone() {
+        for (int y = this.zoneStartY; y < this.zoneEndY; y++) {
+            for (int x = this.zoneStartX; x < this.zoneEndX; x++) {
+                Entity e = entities[x][y];
+                if (e == null) {
+                    System.out.print("0 ");
+                } else {
+                    switch (e.getType()) {
+                        case PREY: 
+                            System.out.print("1 ");
+                            break;
+                        // case PREDATOR -> System.out.print("2 ");
+                        // case FOOD -> System.out.print("3 ");
+                        // default -> System.out.print("? ");
+                    }
+                }
+            }
+            System.out.println(); // Newline after each row
+        }
     }
 
     // Called every tick
@@ -25,8 +45,9 @@ public class EntityHandler {
         responseQueue.clear();
 
         // Phase 1: Gather all intents
-        for (int y = zoneStartY; y < zoneEndY; y++) {
-            for (int x = zoneStartX; x < zoneEndX; x++) {
+        
+        for (int y = this.zoneStartY; y < this.zoneEndY; y++) {
+            for (int x = this.zoneStartX; x < this.zoneEndX; x++) {
                 Entity e = entities[x][y];
                 if (e != null) {
                     e.sendRequests(this, x, y);  // animals only submit requests

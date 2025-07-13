@@ -4,7 +4,7 @@ package io.ecosystems_generation;
 public class Prey extends Animal implements Entity{
     private boolean moveSuccess = false;
     private Entity[][] lastVision = null;
-
+    // private int[] desire_counter = {0,0,0,0};
     @Override
     public EntityType getType() {
         return EntityType.PREY;
@@ -13,10 +13,25 @@ public class Prey extends Animal implements Entity{
     @Override
     public void sendRequests(EntityHandler handler, int x, int y) {
         // Request to sense surroundings with radius 2
-        handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 2));
-
+        if (lastVision == null) {
+            handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 6));
+        }
+        else {
+            for (int i = 0; i < lastVision.length; i++) {
+                for (int j = 0; j < lastVision[0].length; j++) {
+                    if (lastVision[i][j] == null){
+                        System.out.print("0 ");
+                    } else {
+                        System.out.print("1 ");
+                    }
+                    
+                }
+                System.out.println();
+            }
+        }
         // Attempt to move right by 1 tile
-        handler.submitRequest(new Request(RequestType.MOVE, this, x, y, x + 1, y));
+        System.out.println("tryingggg");
+        // handler.submitRequest(new Request(RequestType.MOVE, this, x, y, x + 1, y - 1));
     }
 
     @Override
@@ -24,6 +39,7 @@ public class Prey extends Animal implements Entity{
         switch (response.getType()) {
             case MOVE:
                 moveSuccess = (response.getStatus() == ResponseStatus.SUCCESS);
+                System.out.println(moveSuccess);
                 if (!moveSuccess) {
                 System.out.println("Prey " + getID() + " failed to move.");
             }
