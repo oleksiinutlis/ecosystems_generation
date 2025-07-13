@@ -3,6 +3,10 @@ package io.ecosystems_generation.EntityHandling;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import io.ecosystems_generation.Main;
+import io.ecosystems_generation.World;
+
+import java.util.Random;
 
 public class Predator extends Animal  implements Entity{
     private boolean moveSuccess = false;
@@ -22,7 +26,6 @@ public class Predator extends Animal  implements Entity{
     public Predator(int animalId){
         super(animalId);
 
-        // TODO I INVENTED THIS
     }
 
     @Override
@@ -79,10 +82,10 @@ public class Predator extends Animal  implements Entity{
     public void receiveResponse(Response response) {
         switch (response.getType()) {
             case MOVE:
-                moveSuccess = (response.getStatus() == ResponseStatus.SUCCESS);
-                if (!moveSuccess) {
-                    System.out.println("Prey " + getID() + " failed to move.");
-                }
+//                moveSuccess = (response.getStatus() == ResponseStatus.SUCCESS);
+//                if (!moveSuccess) {
+//                    System.out.println("Prey " + getID() + " failed to move.");
+//                }
 
                 break;
 
@@ -97,7 +100,39 @@ public class Predator extends Animal  implements Entity{
         }
     }
 
+    @Override
+    public boolean isMoving() {
+        return desiredX != drawnX || desiredY != drawnY;
+    }
 
+    @Override
+    public int[] randomStep(int x, int y) {
+        Random rand = World.getRandom();
+        // Randomly choose -1, 0, or +1 for x and y
+        int dx = rand.nextInt(3) - 1; // -1, 0, or +1
+        int dy = rand.nextInt(3) - 1; // -1, 0, or +1
+
+        // Make sure it's not (0, 0) so we actually move
+        while (dx == 0 && dy == 0) {
+            dx = rand.nextInt(3) - 1;
+            dy = rand.nextInt(3) - 1;
+        }
+
+        return new int[] { x + dx, y + dy };
+    }
+
+    public void setDesiredCoordinates(int x, int y){
+        setDesiredX(Main.getTileSize() * x);
+        setDesiredY(Main.getTileSize() * y);
+    }
+
+    public int getDesiredX() {
+        return desiredX;
+    }
+
+    public int getDesiredY() {
+        return desiredY;
+    }
 
 }
 

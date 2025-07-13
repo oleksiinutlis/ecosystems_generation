@@ -11,7 +11,7 @@ import java.util.Queue;
 import java.util.Random;
 
 public class World {
-    private static Entity[][] entities;
+    private static Entity[] entities;
     private static boolean[][] foodMap;
     private static Terrain[][] terrain;
     private static float[][] noise;
@@ -23,7 +23,7 @@ public class World {
     public World(int size, int seed){
         worldSize = size;
         terrain = new Terrain[worldSize][worldSize];
-        entities = new Entity[worldSize][worldSize];
+        entities = new Entity[worldSize];
         foodMap = new boolean[worldSize][worldSize];
 
         // fully random if seed is set to 0
@@ -34,13 +34,13 @@ public class World {
         setTerrain();
         setEntities();
 
-        int min_x = 0;
-        int max_x = entities.length;
-        int min_y = 0;
-        int max_y = entities[0].length;
-
-        // todo remove magic numbers
-        this.handler = new EntityHandler(entities, min_x, max_x, min_y, max_y);
+//        int min_x = 0;
+//        int max_x = entities.length;
+//        int min_y = 0;
+//        int max_y = entities[0].length;
+//
+//        // todo remove magic numbers
+//        this.handler = new EntityHandler(entities, min_x, max_x, min_y, max_y);
 
     }
 
@@ -61,7 +61,7 @@ public class World {
         return terrain;
     }
 
-    public static Entity[][] getEntities() {
+    public static Entity[] getEntities() {
         return entities;
     }
 
@@ -152,13 +152,15 @@ public class World {
                     boolean chance = TerrainUtils.getRandomBoolean(0.5f);
                     if (chance) {
                         Predator predator = addPredator(0, x, y);
-                        entities[x][y] = predator;
+                        entities[x] = predator;
+                        break;
                     }
 
                     chance = TerrainUtils.getRandomBoolean(2f);
                     if (chance) {
                         Prey prey = addPrey(0, x, y);
-                        entities[x][y] = prey;
+                        entities[x] = prey;
+                        break;
                     }
                 }
             }
@@ -168,25 +170,15 @@ public class World {
     public static void addFood(){
         int x = random.nextInt(0, worldSize);
         int y = random.nextInt(0, worldSize);
-        if (terrain[x][y].getMaterialType() == Material.GROUND && entities[x][y] == null
-            && !drawTool.isNearWater(x, y))
-        {
-            foodMap[x][y] = true;
-            entities[x][y] = new Food();
-        }
+        foodMap[x][y] = true;
     }
 
     public static boolean checkForFood(int x, int y){
-        if (entities[x][y] != null)
-        {
-            return foodMap[x][y] && entities[x][y].getType() == EntityType.FOOD;
-        }
-        return false;
+            return foodMap[x][y];
     }
 
     public static void eatFood(int x, int y){
         foodMap[x][y] = false;
-        entities[x][y] = null;
     }
 
     private Predator addPredator(int id, int x, int y){

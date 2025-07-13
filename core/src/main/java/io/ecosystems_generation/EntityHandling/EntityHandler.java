@@ -63,18 +63,18 @@ public class EntityHandler {
             Entity entity_arguments = request.getEntity();
             switch (request.getType()) {
                 case MOVE:
-                    int fromX = request_arguments[0];
-                    int fromY = request_arguments[1];
-                    int toX = request_arguments[2];
-                    int toY = request_arguments[3];
-
-                    if (inBounds(toX, toY) && entities[toX][toY] == null) {
-                        entities[toX][toY] = entity_arguments;
-                        entities[fromX][fromY] = null;
-                        responseQueue.add(new Response(RequestType.MOVE, entity_arguments, ResponseStatus.SUCCESS, null));
-                    } else {
-                        responseQueue.add(new Response(RequestType.MOVE, entity_arguments, ResponseStatus.DENIED, null));
-                    }
+//                    int fromX = request_arguments[0];
+//                    int fromY = request_arguments[1];
+//                    int toX = request_arguments[2];
+//                    int toY = request_arguments[3];
+//
+//                    if (inBounds(toX, toY) && entities[toX][toY] == null) {
+//                        entities[toX][toY] = entity_arguments;
+//                        entities[fromX][fromY] = null;
+//                        responseQueue.add(new Response(RequestType.MOVE, entity_arguments, ResponseStatus.SUCCESS, null));
+//                    } else {
+//                        responseQueue.add(new Response(RequestType.MOVE, entity_arguments, ResponseStatus.DENIED, null));
+//                    }
                 break;
                 case SENSE:
                     int x = request_arguments[0];

@@ -12,4 +12,11 @@ public interface Entity {
     // Phase 2: Entity receives response(s) from the handler
     void receiveResponse(Response r);
     void draw(SpriteBatch batch, TextureRegion[] textures);
+    boolean isMoving();
+
+    int[] randomStep(int x, int y);
+    void setDesiredCoordinates(int x, int y);
+
+    int getDesiredX();
+    int getDesiredY();
 }
