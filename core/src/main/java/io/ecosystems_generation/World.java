@@ -1,6 +1,7 @@
 package io.ecosystems_generation;
 
 import io.ecosystems_generation.EntityHandling.Entity;
+import io.ecosystems_generation.EntityHandling.EntityHandler;
 import io.ecosystems_generation.EntityHandling.Predator;
 import io.ecosystems_generation.EntityHandling.Prey;
 import io.ecosystems_generation.TerrainHandling.Material;
@@ -20,6 +21,7 @@ public class World {
     private static Random random;
     private static int worldSize;
 
+    public EntityHandler handler;
     public World(int size, int seed){
         worldSize = size;
         terrain = new Terrain[worldSize][worldSize];
@@ -34,9 +36,9 @@ public class World {
         setTerrain();
         setEntities();
 
-        // TODO FIX
-//        EntityHandler handler = new EntityHandler(entities, 0, 59, 0, 36);
-//        handler.printZone();
+
+        this.handler = new EntityHandler(entities, min_x, max_x, min_y, max_y);
+
     }
 
 

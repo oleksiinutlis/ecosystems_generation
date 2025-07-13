@@ -5,6 +5,7 @@ import io.ecosystems_generation.TerrainHandling.TerrainUtils;
 
 public class Animal {
     public int animalId;
+    public int getID() { return animalId; }
     public byte animalAge;
     public Gene genderGene;
     // gender has gene id 0b0000
@@ -72,7 +73,7 @@ public class Animal {
     }
 
     public Animal geneticExchange(Animal parentAnimal) {
-        Animal newAnimal = new Animal(
+        Animal new_animal = new Animal(
             assignNewAnimalId(this.animalId, parentAnimal.animalId),
             this.genderGene.recombination(parentAnimal.genderGene),
             this.strengthGene.recombination(parentAnimal.strengthGene),
@@ -85,23 +86,32 @@ public class Animal {
             this.aggresivenessGene.recombination(parentAnimal.aggresivenessGene)
             );
 
-        return newAnimal;
+        return new_animal;
     }
 
     public int assignNewAnimalId(int parentId, int other_parentId) {
         return cantor(parentId, other_parentId);
     }
 
-    public RequestType giveCurrentRequest() {
-        // TODO I INVENTED THIS
-        return RequestType.MOVE;
-    }
 
-    public enum RequestType {
-        MOVE,
-        SENSE,
-        BREED,
-        EAT
+    public static int[] getRandomStepTowards(int current_x, int current_y, int target_x, int target_y, double randomness) {
+        int dx = target_x - current_x;
+        int dy = target_y - current_y;
+
+        int stepX = Integer.compare(dx, 0); // -1, 0, or 1
+        int stepY = Integer.compare(dy, 0);
+
+        // Add jitter with probability
+        if (Math.random() < randomness) {
+            stepX += (int)(Math.round((Math.random() - 0.5) * 2)); // -1, 0, or 1
+            stepY += (int)(Math.round((Math.random() - 0.5) * 2));
+        }
+
+        // Clamp to valid step range
+        stepX = Math.max(-1, Math.min(1, stepX));
+        stepY = Math.max(-1, Math.min(1, stepY));
+
+        return new int[] { target_x + stepX, target_y + stepY };
     }
 
     // A(x,y) = (x^2 + x + 2xy + 3y + y^2) / 2

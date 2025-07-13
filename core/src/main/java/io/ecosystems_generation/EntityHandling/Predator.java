@@ -1,10 +1,11 @@
 package io.ecosystems_generation.EntityHandling;
 
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+public class Predator extends Animal  implements Entity{
+    private boolean moveSuccess = false;
+    private Entity[][] lastVision = null;
 
-public class Predator extends Animal implements Entity {
+    @Override
     public EntityType getType() {
         return EntityType.PREDATOR;
     }

@@ -1,5 +1,4 @@
 package io.ecosystems_generation.EntityHandling;
-
 import java.util.ArrayList; // Import the ArrayList class
 import java.util.List;
 
@@ -7,53 +6,112 @@ public class EntityHandler {
 
     private final Entity[][] entities;
     private final int zoneStartY, zoneEndY;
-    private final List<int[]> movementQueue = new ArrayList<>();
+    private final int zoneStartX, zoneEndX;
 
-    public EntityHandler(Entity[][] entities, int zoneStartY, int zoneEndY) {
+    private final List<Request> requestQueue = new ArrayList<>();
+    private final List<Response> responseQueue = new ArrayList<>();
+
+    public EntityHandler(Entity[][] entities, int zoneStartX, int zoneEndX, int zoneStartY, int zoneEndY) {
         this.entities = entities;
+        this.zoneStartX = zoneStartX;
+        this.zoneEndX = zoneEndX;
         this.zoneStartY = zoneStartY;
         this.zoneEndY = zoneEndY;
     }
-
-    public void sendRequest(RequestType type, Entity entity, int... args) {
-        if (type == RequestType.MOVE) {
-
-                int fromX = args[0];
-                int fromY = args[1];
-                int toX = args[2];
-                int toY = args[3];
-
-                // TODO
-                // THATS MY DRAWING MOVEMENT DONT TOUCH THAT
-                if (entity instanceof Predator){
-                    Predator predator = (Predator) entity;
-                    predator.setDesiredCoordinates(toX, toY);
+        public void printZone() {
+        for (int y = this.zoneStartY; y < this.zoneEndY; y++) {
+            for (int x = this.zoneStartX; x < this.zoneEndX; x++) {
+                Entity e = entities[x][y];
+                if (e == null) {
+                    System.out.print("0 ");
+                } else {
+                    switch (e.getType()) {
+                        case PREY:
+                            System.out.print("1 ");
+                            break;
+                        // case PREDATOR -> System.out.print("2 ");
+                        // case FOOD -> System.out.print("3 ");
+                        // default -> System.out.print("? ");
+                    }
                 }
-                else if (entity instanceof Prey){
-                    Prey prey = (Prey) entity;
-                    prey.setDesiredCoordinates(toX, toY);
-                }
-
-                // Store move requests for later resolution
-                movementQueue.add(new int[]{fromX, fromY, toX, toY});
-
-            // Add more case types like SENSE, EAT, etc.
+            }
+            System.out.println(); // Newline after each row
         }
     }
 
-    public void resolveRequests() {
-        for (int[] req : movementQueue) {
-            int fromX = req[0];
-            int fromY = req[1];
-            int toX = req[2];
-            int toY = req[3];
+    // Called every tick
+    public void stepZone() {
+        requestQueue.clear();
+        responseQueue.clear();
 
-            Entity e = entities[fromX][fromY];
-            if (e != null && entities[toX][toY] == null) {
-                entities[toX][toY] = e;
-                entities[fromX][fromY] = null;
+        // Phase 1: Gather all intents
+
+        for (int y = this.zoneStartY; y < this.zoneEndY; y++) {
+            for (int x = this.zoneStartX; x < this.zoneEndX; x++) {
+                Entity e = entities[x][y];
+                if (e != null) {
+                    e.sendRequests(this, x, y);  // animals only submit requests
+                }
             }
         }
-        movementQueue.clear(); // Clear after applying
+
+        // Phase 2: Resolve requests
+
+
+        for (Request request : requestQueue) {
+            int[] request_arguments = request.getArgs();
+            Entity entity_arguments = request.getEntity();
+            switch (request.getType()) {
+                case MOVE:
+                    int fromX = request_arguments[0];
+                    int fromY = request_arguments[1];
+                    int toX = request_arguments[2];
+                    int toY = request_arguments[3];
+
+                    if (inBounds(toX, toY) && entities[toX][toY] == null) {
+                        entities[toX][toY] = entity_arguments;
+                        entities[fromX][fromY] = null;
+                        responseQueue.add(new Response(RequestType.MOVE, entity_arguments, ResponseStatus.SUCCESS, null));
+                    } else {
+                        responseQueue.add(new Response(RequestType.MOVE, entity_arguments, ResponseStatus.DENIED, null));
+                    }
+                break;
+                case SENSE:
+                    int x = request_arguments[0];
+                    int y = request_arguments[1];
+                    int radius = request_arguments[2];
+                    Entity[][] view = extractSubgrid(x, y, radius);
+                    responseQueue.add(new Response(RequestType.SENSE, entity_arguments, ResponseStatus.SUCCESS, view));
+                break;
+            }
+        }
+
+        // Phase 3: Deliver feedback
+        for (Response result : responseQueue) {
+            result.getEntity().receiveResponse(result);
+        }
+    }
+
+    public void submitRequest(Request r) {
+        requestQueue.add(r);
+    }
+
+    private Entity[][] extractSubgrid(int cx, int cy, int r) {
+        int size = 2 * r + 1;
+        Entity[][] result = new Entity[size][size];
+        for (int dx = -r; dx <= r; dx++) {
+            for (int dy = -r; dy <= r; dy++) {
+                int x = cx + dx;
+                int y = cy + dy;
+                if (inBounds(x, y)) {
+                    result[dx + r][dy + r] = entities[x][y];
+                }
+            }
+        }
+        return result;
+    }
+
+    private boolean inBounds(int x, int y) {
+        return x >= 0 && y >= 0 && x < entities.length && y < entities[0].length;
     }
 }

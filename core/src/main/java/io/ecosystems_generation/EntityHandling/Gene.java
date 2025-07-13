@@ -1,5 +1,4 @@
 package io.ecosystems_generation.EntityHandling;
-
 // NOTE: CURRENT IMPLEMENTATION OF MUTATION COULD HAVE ERRORS IF THE CHOSEN MUTATION VOLATILITY + RANDOM TRAVEL RANGES IS LARGER THAN BE ALLOWED FOR A BYTE
 public class Gene {
     // == required input variables ==
@@ -10,7 +9,7 @@ public class Gene {
     byte mutationVolatility;           // max amount the gene can mutate in one mutation
     byte mutationProbability;          // probability the gene will mutate in byte form (out of 100)
 
-    public Gene(geneBuilder builder) {
+    public Gene(gene_builder builder) {
         this.geneId = builder.geneId;
         this.randomTravelRange = builder.randomTravelRange;
         this.geneValue = builder.geneValue;
@@ -18,7 +17,7 @@ public class Gene {
         this.mutationProbability = builder.mutationProbability;
     }
 
-    public static class geneBuilder {
+    public static class gene_builder {
         public byte geneId;
         public byte randomTravelRange;
 
@@ -26,24 +25,24 @@ public class Gene {
         byte mutationVolatility;
         byte mutationProbability = 25;     // this means 25% of the time the gene will mutate
 
-        public geneBuilder(byte geneId, byte randomTravelRange) {
+        public gene_builder(byte geneId, byte randomTravelRange) {
             this.geneId = geneId;
             this.randomTravelRange = randomTravelRange;
             this.mutationProbability = (byte) (randomTravelRange / 20);
             // this means the value can change 5% of the travel range units per round of mutation
         }
 
-        public geneBuilder set_mutation_probability(byte mutationProbability) {
+        public gene_builder set_mutation_probability(byte mutationProbability) {
             this.mutationProbability = mutationProbability;
             return this;
         }
 
-        public geneBuilder set_mutation_volatility(byte mutationVolatility) {
+        public gene_builder set_mutation_volatility(byte mutationVolatility) {
             this.mutationVolatility = mutationVolatility;
             return this;
         }
 
-        public geneBuilder setGeneValue(byte geneValue) {
+        public gene_builder setGeneValue(byte geneValue) {
             this.geneValue = geneValue;
             return this;
         }
@@ -59,7 +58,7 @@ public class Gene {
 
         if (GeneUtils.getRandomGeneByte((byte) 0b1) > 0) {  // dads gene is chosen, 50% chance
             Gene newGene = new
-                geneBuilder(this.geneId, this.randomTravelRange)
+                gene_builder(this.geneId, this.randomTravelRange)
             .set_mutation_probability(this.mutationProbability)
             .set_mutation_volatility(this.mutationVolatility)
             .setGeneValue(mutate(this.geneValue))
@@ -68,7 +67,7 @@ public class Gene {
         }
         else {                                             // moms gene is chosen
             Gene newGene = new
-                geneBuilder(this.geneId, this.randomTravelRange)
+                gene_builder(this.geneId, this.randomTravelRange)
             .set_mutation_probability(this.mutationProbability)
             .set_mutation_volatility(this.mutationVolatility)
             .setGeneValue(mutate(otherGene.geneValue))
