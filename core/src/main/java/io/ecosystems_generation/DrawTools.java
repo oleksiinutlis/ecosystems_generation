@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+import io.ecosystems_generation.EntityHandling.Entity;
+import io.ecosystems_generation.EntityHandling.EntityType;
 import io.ecosystems_generation.TerrainHandling.Material;
 import io.ecosystems_generation.TerrainHandling.Terrain;
 

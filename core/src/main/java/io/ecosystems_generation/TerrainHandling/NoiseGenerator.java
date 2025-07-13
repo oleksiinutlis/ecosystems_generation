@@ -1,5 +1,7 @@
 package io.ecosystems_generation.TerrainHandling;
 
+import io.ecosystems_generation.World;
+
 import java.util.Random;
 
 public class NoiseGenerator {

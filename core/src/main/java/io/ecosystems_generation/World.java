@@ -1,5 +1,13 @@
 package io.ecosystems_generation;
 
+import io.ecosystems_generation.EntityHandling.Entity;
+import io.ecosystems_generation.EntityHandling.EntityHandler;
+import io.ecosystems_generation.EntityHandling.Prey;
+import io.ecosystems_generation.TerrainHandling.Material;
+import io.ecosystems_generation.TerrainHandling.NoiseGenerator;
+import io.ecosystems_generation.TerrainHandling.Terrain;
+import io.ecosystems_generation.TerrainHandling.TerrainUtils;
+
 import java.util.Random;
 
 public class World {
@@ -84,9 +92,9 @@ public class World {
     }
 
     private void setEntities() {
-        
 
-        
+
+
         // this.entities[59 / 2][36 / 2] = new Prey(0);
         int min_x = 59 / 2 - 9;
         // min_x = 0;
@@ -106,6 +114,6 @@ public class World {
                 }
             }
         }
-        
+
     }
 }
