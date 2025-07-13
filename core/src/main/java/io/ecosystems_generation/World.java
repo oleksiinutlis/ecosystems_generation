@@ -170,7 +170,9 @@ public class World {
     public static void addFood(){
         int x = random.nextInt(0, worldSize);
         int y = random.nextInt(0, worldSize);
-        foodMap[x][y] = true;
+        if(!drawTool.isNearWater(x,y)) {
+            foodMap[x][y] = true;
+        }
     }
 
     public static boolean checkForFood(int x, int y){

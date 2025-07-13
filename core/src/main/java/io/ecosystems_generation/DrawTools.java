@@ -103,6 +103,7 @@ public class DrawTools {
         tileLookup.put(TextureName.DECORATION_LILY_PAD_1, textureTiles[12][16]);
         tileLookup.put(TextureName.DECORATION_LILY_PAD_2, textureTiles[12][16]);
         tileLookup.put(TextureName.DECORATION_LILY_PAD_3, textureTiles[12][16]);
+
     }
 
     private void loadDecorationStructures(){
