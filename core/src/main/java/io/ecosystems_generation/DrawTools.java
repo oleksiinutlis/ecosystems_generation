@@ -251,11 +251,10 @@ public class DrawTools {
                         break;
                 }
 
-                if (World.checkForFood(x,y) && !isNearWater(x,y)){
+                if (World.checkForFood(x,y)){
                     textureRegion = tileLookup.get(TextureName.CARROT);
                     batch.draw(textureRegion, x * TILE_SIZE, y * TILE_SIZE);
                 }
-
             }
         }
         batch.end();

@@ -1,6 +1,6 @@
 package io.ecosystems_generation.EntityHandling;
 
-public class Response {
+public class    Response {
     public final RequestType type;
     public final Entity entity;
     public final ResponseStatus status;

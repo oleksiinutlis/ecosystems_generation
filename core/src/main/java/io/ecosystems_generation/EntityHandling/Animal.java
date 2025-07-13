@@ -73,7 +73,7 @@ public class Animal {
     }
 
     public Animal geneticExchange(Animal parentAnimal) {
-        Animal new_animal = new Animal(
+        Animal newAnimal = new Animal(
             assignNewAnimalId(this.animalId, parentAnimal.animalId),
             this.genderGene.recombination(parentAnimal.genderGene),
             this.strengthGene.recombination(parentAnimal.strengthGene),
@@ -86,7 +86,7 @@ public class Animal {
             this.aggresivenessGene.recombination(parentAnimal.aggresivenessGene)
             );
 
-        return new_animal;
+        return newAnimal;
     }
 
     public int assignNewAnimalId(int parentId, int other_parentId) {

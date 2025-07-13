@@ -1,9 +1,6 @@
 package io.ecosystems_generation;
 
-import io.ecosystems_generation.EntityHandling.Entity;
-import io.ecosystems_generation.EntityHandling.EntityHandler;
-import io.ecosystems_generation.EntityHandling.Predator;
-import io.ecosystems_generation.EntityHandling.Prey;
+import io.ecosystems_generation.EntityHandling.*;
 import io.ecosystems_generation.TerrainHandling.Material;
 import io.ecosystems_generation.TerrainHandling.NoiseGenerator;
 import io.ecosystems_generation.TerrainHandling.Terrain;
@@ -170,24 +167,31 @@ public class World {
     public static void addFood(){
         int x = random.nextInt(0, worldSize);
         int y = random.nextInt(0, worldSize);
-        if (terrain[x][y].getMaterialType() == Material.GROUND){
+        if (terrain[x][y].getMaterialType() == Material.GROUND && entities[x][y] == null){
             foodMap[x][y] = true;
+            entities[x][y] = new Food();
         }
 
     }
 
     public static boolean checkForFood(int x, int y){
-        return foodMap[x][y];
+        if (entities[x][y] != null)
+        {
+            System.out.println("food " + (entities[x][y].getType() == EntityType.FOOD));
+            return foodMap[x][y] && entities[x][y].getType() == EntityType.FOOD;
+        }
+        return false;
     }
 
     public static void eatFood(int x, int y){
         foodMap[x][y] = false;
+        entities[x][y] = null;
     }
 
     private Predator addPredator(int id, int x, int y){
         Predator predator = new Predator(id);
         predator.setDrawnCoordinates(x * 16, y * 16);
-        predator.setDesiredCoordinates(x + 5, y + 5);
+        predator.setDesiredCoordinates(x, y);
         predator.setAnimationFrame(0);
         predator.setTextureAnimationsCount(6);
 
@@ -197,7 +201,7 @@ public class World {
     private Prey addPrey(int id, int x, int y){
         Prey prey = new Prey(id);
         prey.setDrawnCoordinates(x * 16, y * 16);
-        prey.setDesiredCoordinates(x + 5,  y + 5);
+        prey.setDesiredCoordinates(x,  y);
         prey.setAnimationFrame(0);
 
         prey.setTextureAnimationsCount(4);
