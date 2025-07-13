@@ -208,99 +208,23 @@ public class DrawTools {
     }
 
     public void drawEntities(Entity[][] entities) {
-        batch.begin();
-        for (int x = 0; x < entities.length; x++) {
-            for (int y = 0; y < entities[x].length; y++) {
-                if (entities[x][y] != null) {
-                    EntityType entityType = entities[x][y].getType();
+        for (Entity[] entityArray : entities) {
+            for (Entity entity : entityArray) {
+                if (entity != null) {
+                    EntityType entityType = entity.getType();
                     switch (entityType) {
                         case PREY:
-                            Prey prey = (Prey) entities[x][y];
-                            if (prey.isMoving()) {
-                                int frame = prey.getAnimationFrame();
-                                int drawnX = prey.getDrawnX();
-                                int drawnY = prey.getDrawnY();
-
-                                int desiredX = prey.getDesiredX();
-                                int desiredY = prey.getDesiredY();
-
-                                if (drawnX >= desiredX) {
-                                    // We want to move left so we
-                                    frame += 4;
-                                }
-
-                                // TODO REPLACE THE -1 / 1 with -speed / speed
-                                // speed has to be reasonable, make it 1 to 5
-                                if (drawnX > desiredX) {
-                                    drawnX += -1;
-                                } else if (drawnX < desiredX) {
-                                    drawnX += 1;
-                                }
-
-                                if (drawnY > desiredY) {
-                                    drawnY += -1;
-                                } else if (drawnY < desiredY) {
-                                    drawnY += 1;
-                                }
-
-
-                                prey.setDrawnCoordinates(drawnX, drawnY);
-                                batch.draw(chickenAnimations[frame], drawnX, drawnY, 24, 24);
-                                int rendersSinceTextureChange = prey.getRendersSinceTextureChange();
-                                if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0) {
-                                    prey.setNextFrame();
-                                }
-                                prey.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
-                            } else {
-                                batch.draw(chickenAnimations[prey.getAnimationFrame()], prey.getDrawnX(), prey.getDrawnY(), 24, 24);
-                            }
+                            Prey prey = (Prey) entity;
+                            prey.draw(batch, chickenAnimations);
                             break;
                         case PREDATOR:
-                            Predator predator = (Predator) entities[x][y];
-                            if (predator.isMoving()) {
-                                int frame = predator.getAnimationFrame();
-                                int drawnX = predator.getDrawnX();
-                                int drawnY = predator.getDrawnY();
-
-                                int desiredX = predator.getDesiredX();
-                                int desiredY = predator.getDesiredY();
-
-                                if (drawnX >= desiredX) {
-                                    // We want to move left so we
-                                    frame += 6;
-                                }
-
-                                // TODO REPLACE THE -1 / 1 with -speed / speed
-                                // speed has to be reasonable, make it 1 to 5
-                                if (drawnX > desiredX) {
-                                    drawnX += -1;
-                                } else if (drawnX < desiredX) {
-                                    drawnX += 1;
-                                }
-
-                                if (drawnY > desiredY) {
-                                    drawnY += -1;
-                                } else if (drawnY < desiredY) {
-                                    drawnY += 1;
-                                }
-
-
-                                predator.setDrawnCoordinates(drawnX, drawnY);
-                                batch.draw(boarAnimations[frame], drawnX, drawnY, 48, 36);
-                                int rendersSinceTextureChange = predator.getRendersSinceTextureChange();
-                                if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0) {
-                                    predator.setNextFrame();
-                                }
-                                predator.setRendersSinceTextureChange(rendersSinceTextureChange + 1);
-                            } else {
-                                batch.draw(boarAnimations[predator.getAnimationFrame()], predator.getDrawnX(), predator.getDrawnY(), 48, 36);
-                            }
+                            Predator predator = (Predator) entity;
+                            predator.draw(batch, boarAnimations);
                             break;
                     }
                 }
             }
         }
-        batch.end();
     }
 
     public void drawTerrain(){
@@ -495,4 +419,5 @@ public class DrawTools {
     private boolean isInBounds(int x, int y) {
         return x >= 0 && x < worldSize && y >= 0 && y < worldSize;
     }
+
 }

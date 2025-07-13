@@ -19,7 +19,6 @@ public class World {
     private static float[][] noise;
     private static Random random;
     private static int worldSize;
-    private Queue<Terrain> terrainQueue = new LinkedList<>();
 
     public World(int size, int seed){
         worldSize = size;
@@ -91,7 +90,6 @@ public class World {
     }
 
     private void terrainCleanup() {
-
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 Material currentType = terrain[x][y].getMaterialType();
@@ -143,33 +141,18 @@ public class World {
     }
 
     private void setEntities() {
-        // TODO I REMOVED YOUR MAGIC NUMBERS
         for (int x = 0; x < worldSize; x++) {
             for (int y = 0; y < worldSize; y++) {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
                     boolean chance = TerrainUtils.getRandomBoolean(0.5f);
                     if (chance) {
-
-                        Predator predator = new Predator(0);
-                        predator.setDrawnCoordinates(x * 16, y * 16);
-                        predator.setDesiredCoordinates(50, 50);
-                        predator.setAnimationFrame(0);
-
-                        predator.setTextureAnimationsCount(6);
-                        // 4 textures for chicken, 6 for boar
+                        Predator predator = addPredator(0, x, y);
                         entities[x][y] = predator;
                     }
 
-                    // TODO entity setting
                     chance = TerrainUtils.getRandomBoolean(2f);
                     if (chance) {
-                        Prey prey = new Prey(0);
-                        prey.setDrawnCoordinates(x * 16, y * 16);
-                        prey.setDesiredCoordinates(100, 100);
-                        prey.setAnimationFrame(0);
-
-                        prey.setTextureAnimationsCount(4);
-                        // 4 textures for chicken, 6 for boar
+                        Prey prey = addPrey(0, x, y);
                         entities[x][y] = prey;
                     }
                 }
@@ -192,5 +175,26 @@ public class World {
 
     public static void eatFood(int x, int y){
         foodMap[x][y] = false;
+    }
+
+    private Predator addPredator(int id, int x, int y){
+        Predator predator = new Predator(id);
+        predator.setDrawnCoordinates(x * 16, y * 16);
+        predator.setDesiredCoordinates(x + 5, y + 5);
+        predator.setAnimationFrame(0);
+        predator.setTextureAnimationsCount(6);
+
+        return predator;
+    }
+
+    private Prey addPrey(int id, int x, int y){
+        Prey prey = new Prey(id);
+        prey.setDrawnCoordinates(x * 16, y * 16);
+        prey.setDesiredCoordinates(x + 5,  y + 5);
+        prey.setAnimationFrame(0);
+
+        prey.setTextureAnimationsCount(4);
+
+        return prey;
     }
 }

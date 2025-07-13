@@ -38,7 +38,7 @@ public class Main extends ApplicationAdapter{
 
 
     private static int WORLD_WIDTH = 250;
-    private static int WORLD_HEIGHT = 250;
+    private static int WORLD_HEIGHT = 140;
 
     private static int GRID_VISIBLE_WIDTH = 250;
     private static int GRID_VISIBLE_HEIGHT = 140;

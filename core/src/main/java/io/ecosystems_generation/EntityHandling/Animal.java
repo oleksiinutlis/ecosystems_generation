@@ -1,6 +1,7 @@
 package io.ecosystems_generation.EntityHandling;
 
 import io.ecosystems_generation.Main;
+import io.ecosystems_generation.TerrainHandling.TerrainUtils;
 
 public class Animal {
     public int animalId;
@@ -103,7 +104,6 @@ public class Animal {
         EAT
     }
 
-
     // A(x,y) = (x^2 + x + 2xy + 3y + y^2) / 2
     // Cantor pairing function
     public int cantor(int x, int y){
@@ -172,5 +172,13 @@ public class Animal {
 
     public void setRendersSinceTextureChange(int rendersSinceTextureChange) {
         this.rendersSinceTextureChange = rendersSinceTextureChange;
+    }
+
+    void changeTexture(){
+        int rendersSinceTextureChange = getRendersSinceTextureChange();
+        if (rendersSinceTextureChange % TerrainUtils.getRandomInt(1, 31) == 0) {
+            setNextFrame();
+        }
+        setRendersSinceTextureChange(rendersSinceTextureChange + 1);
     }
 }

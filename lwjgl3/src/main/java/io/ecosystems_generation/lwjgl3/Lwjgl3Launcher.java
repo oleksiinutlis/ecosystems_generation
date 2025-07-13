@@ -28,7 +28,7 @@
         configuration.setForegroundFPS(Lwjgl3ApplicationConfiguration.getDisplayMode().refreshRate + 1);
         //// If you remove the above line and set Vsync to false, you can get unlimited FPS, which can be
         //// useful for testing performance, but can also be very stressful to some hardware.
-        //// You may also need to configure GPU drivers to fully disab  le Vsync; this can cause screen tearing.
+        //// You may also need to configure GPU drivers to fully disab|le Vsync; this can cause screen tearing.
         Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
 //        configuration.setWindowedMode(1024,1024);
 // Get the current monitor's display mode (native resolution)
