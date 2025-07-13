@@ -1,9 +1,7 @@
 package io.ecosystems_generation.lwjgl3;
 
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-
 import io.ecosystems_generation.Main;
 
 /** Launches the desktop (LWJGL3) application. */
