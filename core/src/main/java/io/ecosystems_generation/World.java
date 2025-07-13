@@ -36,7 +36,12 @@ public class World {
         setTerrain();
         setEntities();
 
+        int min_x = 0;
+        int max_x = 59;
+        int min_y = 0;
+        int max_y = 36;
 
+        // todo remove magic numbers
         this.handler = new EntityHandler(entities, min_x, max_x, min_y, max_y);
 
     }
