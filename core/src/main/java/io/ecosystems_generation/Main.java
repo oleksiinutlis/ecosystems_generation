@@ -10,8 +10,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.ecosystems_generation.EntityHandling.Entity;
-import io.ecosystems_generation.EntityHandling.Predator;
-import io.ecosystems_generation.EntityHandling.Prey;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter{
@@ -34,7 +32,7 @@ public class Main extends ApplicationAdapter{
     private static final int WORLD_SEED = 1278; // leave 0 for random seed
 
     // camera panning speed
-    float speed = 400f;
+    float speed = 300f;
 
 
     private static int WORLD_WIDTH = 250;
@@ -130,8 +128,8 @@ public class Main extends ApplicationAdapter{
         camera.position.y = Math.min(camera.position.y, camera.viewportHeight - camera.zoom * camera.viewportHeight / 2f);
 
         // zoom logic
-        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.007f;
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.007f;
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) camera.zoom += 0.005f;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) camera.zoom -= 0.005f;
 
         // zoom clamp
         camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 1.0f);

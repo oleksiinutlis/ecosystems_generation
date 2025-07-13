@@ -99,10 +99,6 @@ public class DrawTools {
 
         tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[7][3]);
 
-        // TODO: REPLACE TREE
-        // stone for now, no tree textures yet
-        tileLookup.put(TextureName.TREE_PLACEHOLDER, textureTiles[5][6]);
-
         tileLookup.put(TextureName.DECORATION_LILY_PAD_0, textureTiles[0][2]);
         tileLookup.put(TextureName.DECORATION_LILY_PAD_1, textureTiles[0][3]);
         tileLookup.put(TextureName.DECORATION_LILY_PAD_2, textureTiles[0][4]);
@@ -175,8 +171,6 @@ public class DrawTools {
             case WATER:
                 float blueShade = 0.3f + 0.7f * (f / 0.30f); // deeper = darker
                 return new Color(0f, 0f, blueShade, 1f);
-            case TREE:
-                return new Color(0.59f, 0.29f, 0.0f, 1f); // Reddish brown
             case DECORATION:
                 return new Color(0.502f, 0.502f, 0.502f, 1f); // SlateGray
             case GROUND:

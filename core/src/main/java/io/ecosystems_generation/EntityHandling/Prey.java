@@ -21,17 +21,19 @@ public class Prey extends Animal implements Entity {
             handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 6));
         }
         else {
-            // for (int i = 0; i < lastVision.length; i++) {
-            //     for (int j = 0; j < lastVision[0].length; j++) {
-            //         if (lastVision[i][j] == null){
-            //             System.out.print("0 ");
-            //         } else {
-            //             System.out.print("1 ");
-            //         }
-
-            //     }
-            //     System.out.println();
-            // }
+             int mid = (int) Math.floor((float) lastVision.length / 2f);
+             for (int i = 0; i < lastVision.length; i++) {
+                 for (int j = 0; j < lastVision[0].length; j++) {
+                     if (lastVision[x][y] != null)
+                         switch (lastVision[i][j].getType()){
+                             case FOOD:
+                                 double distance = calculateDistance(i, j, mid);
+                             case PREY:
+                             case PREDATOR:
+                         }
+                 }
+                 System.out.println();
+             }
             int[] target = {0,0};
             int[] next = getRandomStepTowards(x, y, target[0], target[0], 1);
             System.out.println("tryingggg");
@@ -113,5 +115,11 @@ public class Prey extends Animal implements Entity {
             batch.draw(textures[getAnimationFrame()], getDrawnX(), getDrawnY(), 24, 24);
         }
         batch.end();
+    }
+
+    private double calculateDistance (int x, int y, int mid){
+        double distanceX = Math.abs(mid - x);
+        double distanceY = Math.abs(mid - y);
+        return Math.sqrt(distanceX * distanceX + distanceY * distanceY);
     }
 }

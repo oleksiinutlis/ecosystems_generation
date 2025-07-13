@@ -177,7 +177,6 @@ public class World {
     public static boolean checkForFood(int x, int y){
         if (entities[x][y] != null)
         {
-            System.out.println("food " + (entities[x][y].getType() == EntityType.FOOD));
             return foodMap[x][y] && entities[x][y].getType() == EntityType.FOOD;
         }
         return false;
