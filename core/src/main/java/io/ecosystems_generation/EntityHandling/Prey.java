@@ -7,7 +7,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Prey extends Animal implements Entity {
     private boolean moveSuccess = false;
     private Entity[][] lastVision = null;
-
+    private int ticksSinceLastEaten = 0;
+    private int ticksSinceLastBreed = 0;
+    private boolean predatorNearby = false;
+    private int[] nearestPredator = null;
+    private int[] nearestFood = null;
+    private int[] nearestMate = null;
     // private int[] desire_counter = {0,0,0,0};
 
     @Override
@@ -24,12 +29,15 @@ public class Prey extends Animal implements Entity {
              int mid = (int) Math.floor((float) lastVision.length / 2f);
              for (int i = 0; i < lastVision.length; i++) {
                  for (int j = 0; j < lastVision[0].length; j++) {
-                     if (lastVision[x][y] != null)
+                     if (lastVision[i][j] != null)
                          switch (lastVision[i][j].getType()){
-                             case FOOD:
-                                 double distance = calculateDistance(i, j, mid);
-                             case PREY:
-                             case PREDATOR:
+                            case FOOD:
+                                double distance = calculateDistance(i, j, mid);
+                            break;
+                            case PREY:
+                            break;
+                            case PREDATOR:
+                            break;
                          }
                  }
                  System.out.println();

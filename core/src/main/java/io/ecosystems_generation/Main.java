@@ -21,11 +21,11 @@ public class Main extends ApplicationAdapter{
     private static int tickCount = 0;
 
     // constants
-    private static final float ticksPerSecond = 600f;
+    private static final float ticksPerSecond = 1f;
     private static final float TICK_INTERVAL = 1 / ticksPerSecond;
 
     // Game parameters
-    private static final int foodGenPerSecond = 125;
+    private static final int foodGenPerSecond = 1;
 
     private static final int worldSize = 250;
 
@@ -110,6 +110,8 @@ public class Main extends ApplicationAdapter{
     private void handleTickLogic(){
         tickCount++;
         addFood();
+        this.world.handler.stepZone();
+        this.world.handler.printZone();
     }
 
     private void handleCameraMovement(){
