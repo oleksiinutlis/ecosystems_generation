@@ -53,7 +53,6 @@ public class Main extends ApplicationAdapter{
 
         tick();
         // System.out.println("tick happened");
-        this.world.handler.stepZone();
         // this.world.handler.printZone();
         drawTool.drawTiles();
         drawTool.drawEntities(world.getEntities());
@@ -78,5 +77,6 @@ public class Main extends ApplicationAdapter{
 
     public void handleTickLogic(){
         tickCount++;
+        this.world.handler.stepZone();
     }
 }

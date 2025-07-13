@@ -101,7 +101,7 @@ public class World {
                 if (terrain[x][y].getMaterialType() == Material.GROUND) {
                 boolean chance = TerrainUtils.getRandomBoolean(1);
                     if (chance) {
-                        this.entities[x][y] = new Prey(0);
+                        this.entities[x][y] = new Prey(0    );
                     }
                 }
             }
