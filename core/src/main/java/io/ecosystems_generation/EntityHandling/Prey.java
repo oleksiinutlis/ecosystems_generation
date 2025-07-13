@@ -21,31 +21,26 @@ public class Prey extends Animal implements Entity {
     }
 
     public void sendRequests(EntityHandler handler, int x, int y) {
+        ticksSinceLastEaten++;
+        ticksSinceLastBreed++;
+        
+
+
         // Request to sense surroundings with radius 2
         if (lastVision == null) {
             handler.submitRequest(new Request(RequestType.SENSE, this, x, y, 6));
         }
         else {
-             int mid = (int) Math.floor((float) lastVision.length / 2f);
-             for (int i = 0; i < lastVision.length; i++) {
-                 for (int j = 0; j < lastVision[0].length; j++) {
-                     if (lastVision[i][j] != null)
-                         switch (lastVision[i][j].getType()){
-                            case FOOD:
-                                double distance = calculateDistance(i, j, mid);
-                            break;
-                            case PREY:
-                            break;
-                            case PREDATOR:
-                            break;
-                         }
-                 }
-                 System.out.println();
-             }
+            updateKnownThreatsAndTargets(lastVision);
+            int mid = (int) Math.floor((float) lastVision.length / 2f);
+            
+            
             int[] target = {0,0};
             int[] next = getRandomStepTowards(x, y, target[0], target[0], 1);
             System.out.println("tryingggg");
             handler.submitRequest(new Request(RequestType.MOVE, this, x, y, next[0], next[1]));
+
+            
         }
         // Attempt to move right by 1 tile
     }
@@ -64,7 +59,6 @@ public class Prey extends Animal implements Entity {
             case SENSE:
                 if (response.getStatus() == ResponseStatus.SUCCESS) {
                     lastVision = (Entity[][]) response.getResult();
-                    System.out.println("Prey " + getID() + " saw something.");
                 } else {
                     lastVision = null;
                 }
@@ -72,6 +66,48 @@ public class Prey extends Animal implements Entity {
         }
     }
 
+
+    private void updateKnownThreatsAndTargets(Entity[][] vision) {
+        nearestPredator = null;
+        nearestFood = null;
+        nearestMate = null;
+        predatorNearby = false;
+
+        int minPredDist = Integer.MAX_VALUE;
+        int minFoodDist = Integer.MAX_VALUE;
+        int minMateDist = Integer.MAX_VALUE;
+
+        for (int i = 0; i < vision.length; i++) {
+            for (int j = 0; j < vision[0].length; j++) {
+                Entity e = vision[i][j];
+                if (e == null || e == this) continue;
+
+                int dist = Math.abs(i - vision.length / 2) + Math.abs(j - vision[0].length / 2); // Manhattan distance
+
+                switch (e.getType()) {
+                    case PREDATOR: 
+                        predatorNearby = true;
+                        if (dist < minPredDist) {
+                            minPredDist = dist;
+                            nearestPredator = new int[]{i, j};
+                        }
+                    break;
+                    case FOOD:
+                        if (dist < minFoodDist) {
+                            minFoodDist = dist;
+                            nearestFood = new int[]{i, j};
+                        }
+                    break;
+                    case PREY:
+                        if (dist < minMateDist) {
+                            minMateDist = dist;
+                            nearestMate = new int[]{i, j};
+                        }
+                    break;
+                }
+            }
+        }
+}
 
     public Prey(int animal_id, Gene gender_gene, Gene speed_gene, Gene strength_gene, Gene sexy_gene, Gene breeding_freq_gene, Gene cardio_gene, Gene sensing_strength_gene, Gene likability_gene, Gene aggresiveness_gene) {
         super(animal_id, gender_gene, speed_gene, strength_gene, sexy_gene, breeding_freq_gene, cardio_gene, sensing_strength_gene, likability_gene, aggresiveness_gene);
