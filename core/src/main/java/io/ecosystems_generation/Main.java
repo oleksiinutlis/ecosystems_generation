@@ -11,8 +11,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.ecosystems_generation.EntityHandling.Entity;
 
-import java.util.Random;
-
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter{
     private World world;
@@ -85,13 +83,11 @@ public class Main extends ApplicationAdapter{
         camera.update();
         batch.setProjectionMatrix(camera.combined);
 
-        Entity[] entities = World.getEntities();
+        Entity[][] entities = World.getEntities();
         drawTool.drawTerrain();
         drawTool.drawExtras();
         drawTool.drawEntities(entities);
         // world tick, everything synced to this
-
-        addFood();
         tick();
     }
 
@@ -113,9 +109,9 @@ public class Main extends ApplicationAdapter{
 
     private void handleTickLogic(){
         tickCount++;
-//        this.world.handler.stepZone();
-
-    randomMove();
+        addFood();
+        this.world.handler.stepZone();
+        this.world.handler.printZone();
     }
 
     private void handleCameraMovement(){
@@ -144,7 +140,9 @@ public class Main extends ApplicationAdapter{
     }
 
     private void addFood(){
-        World.addFood();
+        if ((tickCount % (int) (ticksPerSecond / foodGenPerSecond)) == 0){
+            World.addFood();
+        }
     }
 
     public static int getTickCount() {
@@ -153,19 +151,6 @@ public class Main extends ApplicationAdapter{
 
     public static int getTileSize(){
         return TILE_SIZE;
-    }
-
-    public void randomMove(){
-        Entity[] entities = World.getEntities();
-            for (Entity entity : entities) {
-                if (entity != null && !entity.isMoving()) {
-                        Random random = World.getRandom();
-                        int[] coords = entity.randomStep(entity.getDesiredX(), entity.getDesiredY());
-                        entity.setDesiredCoordinates(World.getRandom().nextInt(0, WORLD_WIDTH),
-                                                     World.getRandom().nextInt(0, WORLD_HEIGHT));
-
-                }
-            }
     }
 
 }

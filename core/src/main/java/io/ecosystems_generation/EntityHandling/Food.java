@@ -23,29 +23,4 @@ public class Food implements Entity{
     public void draw(SpriteBatch batch, TextureRegion[] textures) {
         //
     }
-
-    @Override
-    public boolean isMoving() {
-//        return desiredX != drawnX || desiredY != drawnY;
-        return true;
-    }
-
-    @Override
-    public int[] randomStep(int x, int y) {
-        return new int[0];
-    }
-
-    public void setDesiredCoordinates(int x, int y){
-//        setDesiredX(Main.getTileSize() * x);
-//        setDesiredY(Main.getTileSize() * y);
-    }
-
-    public int getDesiredX() {
-        return 0;
-    }
-
-    public int getDesiredY() {
-        return 0;
-    }
-
 }

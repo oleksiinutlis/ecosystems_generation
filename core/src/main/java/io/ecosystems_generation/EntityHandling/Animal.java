@@ -151,8 +151,20 @@ public class Animal {
         return drawnY;
     }
 
+    public boolean isMoving() {
+        return desiredX != drawnX || desiredY != drawnY;
+    }
+
+    public int getDesiredX() {
+        return desiredX;
+    }
+
     public void setDesiredX(int desiredX) {
         this.desiredX = desiredX;
+    }
+
+    public int getDesiredY() {
+        return desiredY;
     }
 
     public void setDesiredY(int desiredY) {

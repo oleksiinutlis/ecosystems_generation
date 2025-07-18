@@ -80,29 +80,29 @@ public class DrawTools {
         tileLookup.put(TextureName.GRASS_DEFAULT_4, textureTiles[9][8]);
         tileLookup.put(TextureName.GRASS_DEFAULT_5, textureTiles[10][8]);
 
-        tileLookup.put(TextureName.GRASS_WATER_EDGE_LEFT,  textureTiles[0][0]);
-        tileLookup.put(TextureName.GRASS_WATER_EDGE_RIGHT, textureTiles[9][7]);
-        tileLookup.put(TextureName.GRASS_WATER_EDGE_TOP, textureTiles[9][8]);
-        tileLookup.put(TextureName.GRASS_WATER_EDGE_BOTTOM, textureTiles[10][8]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_LEFT, textureTiles[7][4]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_RIGHT, textureTiles[7][2]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_TOP, textureTiles[8][3]);
+        tileLookup.put(TextureName.GRASS_WATER_EDGE_BOTTOM, textureTiles[6][3]);
 
-        tileLookup.put(TextureName.GRASS_WATER_OUTER_TOP_LEFT,  textureTiles[0][0]);
-        tileLookup.put(TextureName.GRASS_WATER_OUTER_TOP_RIGHT, textureTiles[9][7]);
-        tileLookup.put(TextureName.GRASS_WATER_OUTER_BOTTOM_LEFT, textureTiles[9][8]);
-        tileLookup.put(TextureName.GRASS_WATER_OUTER_BOTTOM_RIGHT, textureTiles[10][8]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_TOP_LEFT, textureTiles[9][2]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_TOP_RIGHT, textureTiles[9][3]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_BOTTOM_LEFT, textureTiles[10][2]);
+        tileLookup.put(TextureName.GRASS_WATER_OUTER_BOTTOM_RIGHT, textureTiles[10][3]);
 
-        tileLookup.put(TextureName.GRASS_WATER_INNER_TOP_LEFT,  textureTiles[0][0]);
-        tileLookup.put(TextureName.GRASS_WATER_INNER_TOP_RIGHT, textureTiles[9][7]);
-        tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_LEFT, textureTiles[9][8]);
-        tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_RIGHT, textureTiles[10][8]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_TOP_LEFT, textureTiles[8][4]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_TOP_RIGHT, textureTiles[8][2]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_LEFT, textureTiles[6][4]);
+        tileLookup.put(TextureName.GRASS_WATER_INNER_BOTTOM_RIGHT, textureTiles[6][2]);
 
         loadDecorationStructures();
 
-        tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[12][16]);
+        tileLookup.put(TextureName.WATER_DEFAULT, textureTiles[7][3]);
 
-        tileLookup.put(TextureName.DECORATION_LILY_PAD_0, textureTiles[12][16]);
-        tileLookup.put(TextureName.DECORATION_LILY_PAD_1, textureTiles[12][16]);
-        tileLookup.put(TextureName.DECORATION_LILY_PAD_2, textureTiles[12][16]);
-        tileLookup.put(TextureName.DECORATION_LILY_PAD_3, textureTiles[12][16]);
+        tileLookup.put(TextureName.DECORATION_LILY_PAD_0, textureTiles[0][2]);
+        tileLookup.put(TextureName.DECORATION_LILY_PAD_1, textureTiles[0][3]);
+        tileLookup.put(TextureName.DECORATION_LILY_PAD_2, textureTiles[0][4]);
+        tileLookup.put(TextureName.DECORATION_LILY_PAD_3, textureTiles[0][5]);
     }
 
     private void loadDecorationStructures(){
@@ -201,8 +201,9 @@ public class DrawTools {
         batch.end();
     }
 
-    public void drawEntities(Entity[] entities) {
-        for (Entity entity : entities) {
+    public void drawEntities(Entity[][] entities) {
+        for (Entity[] entityArray : entities) {
+            for (Entity entity : entityArray) {
                 if (entity != null) {
                     EntityType entityType = entity.getType();
                     switch (entityType) {
@@ -215,6 +216,7 @@ public class DrawTools {
                             predator.draw(batch, boarAnimations);
                             break;
                     }
+                }
             }
         }
     }
