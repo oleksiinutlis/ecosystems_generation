@@ -10,7 +10,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import io.ecosystems_generation.EntityHandling.Entity;
-import io.ecosystems_generation.TerrainHandling.Material;
 
 import java.util.Random;
 
@@ -162,10 +161,9 @@ public class Main extends ApplicationAdapter{
                 if (entity != null && !entity.isMoving()) {
                         Random random = World.getRandom();
                         int[] coords = entity.randomStep(entity.getDesiredX(), entity.getDesiredY());
-                        int randX = World.getRandom().nextInt(0, WORLD_WIDTH);
-                        int randY = World.getRandom().nextInt(0, WORLD_HEIGHT);
-                        if (World.getTerrain()[randX][randY].getMaterialType() == Material.GROUND)
-                            entity.setDesiredCoordinates(randX, randY);
+                        entity.setDesiredCoordinates(World.getRandom().nextInt(0, WORLD_WIDTH),
+                                                     World.getRandom().nextInt(0, WORLD_HEIGHT));
+
                 }
             }
     }
